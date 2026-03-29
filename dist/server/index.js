@@ -1,17 +1,28 @@
-const URL = "localhost";
-const PORT = 5000;
-// console.log(require('crypto').randomBytes(32).toString('hex'))
+import dotenv from 'dotenv';
 import express from "express";
 import cors from "cors";
 import session from "express-session";
 import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import { loadUsers } from "./src/files/loadAndSave.js";
+import fs from "fs";
+import { loadUsers } from "./src/files/loadAndSaveUsers.js";
 import { findUserByPassword } from "./src/auth/findUser.js";
+import { register } from "./src/utils/register.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-export const publicPath = path.join(__dirname, "../public");
+// Load environment variables
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+export const PUBLIC_PATH = path.join(__dirname, "../public");
+const PUBLIC_PATHS = [
+    '/welcome',
+    '/assets',
+    '/errors',
+    '/favicon.ico',
+    "/register"
+];
+const URL = process.env.URL;
+const PORT = process.env.PORT;
 const app = express();
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -29,13 +40,39 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
-app.use(express.static(publicPath));
+// Authentication middleware
+app.use((req, res, next) => {
+    // Check if the request route is public
+    const isPublic = PUBLIC_PATHS.some((path) => req.path.startsWith(path));
+    // const isPublic =
+    //     req.path.startsWith('/welcome') ||
+    //     req.path.startsWith('/assets') ||
+    //     req.path.startsWith('/errors') ||
+    //     req.path === '/favicon.ico';
+    // Errors handling
+    // If user is not logged in and trying to access /home, redirect to /welcome
+    if ((!req.session || !req.session.user) && req.path.startsWith('/home')) {
+        return res.redirect('/welcome');
+    }
+    // If page does not exist, redirect to 404 error
+    if (!fs.existsSync(path.join(__dirname, `../public${req.path}`))) {
+        return res.redirect('/errors/404');
+    }
+    // If user is not logged in and trying to access a secured route, redirect to 403 FORBIDDEN page error
+    if ((!req.session || !req.session.user) && !isPublic) {
+        return res.redirect('/errors/403');
+    }
+    next();
+});
+// Serve static files
+app.use(express.static(PUBLIC_PATH));
 export let users = [];
 app.post("/register", (req, res) => {
     if (!req.body.username || !req.body.password)
         return res.status(400);
-    // require('crypto').randomBytes(32).toString('hex')
     try {
+        const user = register(req.body.username, req.body.password);
+        res.json({ user: user, ok: true });
     }
     catch (e) {
     }
@@ -48,18 +85,9 @@ app.post("/login", (req, res) => {
     req.session.user = user;
     return res.json({ user: user, ok: true });
 });
-// EXAMPLES
-// // dowolny route — req.session już działa
-// app.post('/login', (req, res) => {
-//   req.session.userId = 42;   // zapis
-//   res.json({ ok: true });
-// });
-// app.get('/profil', (req, res) => {
-//   console.log(req.session.userId);  // odczyt → 42
-// });
 app.post('/logout', (req, res) => {
     // @ts-ignore
-    req.session.destroy(); // kasowanie
+    req.session.destroy(); // remove user session
     res.json({ ok: true });
 });
 app.listen(PORT, () => {
@@ -71,3 +99,11 @@ app.listen(PORT, () => {
     console.log(users);
     console.log(`Server running on port ${PORT}`);
 });
+// Expose commonly used variables to console for debugging
+globalThis.users = users;
+globalThis.loadUsers = loadUsers;
+globalThis.findUserByPassword = findUserByPassword;
+globalThis.register = register;
+globalThis.__dirname = __dirname;
+globalThis.path = path;
+globalThis.fs = fs;

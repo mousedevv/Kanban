@@ -5,9 +5,9 @@ export class User {
     UUID: string;
     passwordHash: string;
 
-    constructor(username: string, passwordHash: string, UUID?: string, ) {
+    constructor(username: string, passwordHash: string, UUID?: string) {
         this.username = username;
-        this.UUID = UUID || crypto.randomUUID();
         this.passwordHash = passwordHash;
+        this.UUID = UUID || crypto.randomUUID();
     }
 }

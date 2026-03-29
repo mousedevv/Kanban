@@ -5,6 +5,7 @@
     --text: #FFFFFF;
     --kanban-text: #c6c90f;
     --kanban-not-important-text: #bfce3d;
+    --shadow-color: rgba(198, 201, 15, 0.3);
     --not-important-text: #464646;
 }
 
@@ -16,6 +17,12 @@
 
 .flexCol {
     flex-direction: column;
+}
+
+.flexColNotCenter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .hidden {

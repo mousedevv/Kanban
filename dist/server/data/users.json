@@ -1,7 +1,7 @@
 [
     {
-        "username": "admin",
-        "UUID": "UUID_HERE",
-        "hash": "PASSWORD_HASH_HERE"
+        "username": "adminxdd",
+        "passwordHash": "PASSWORD_HASH_HERE",
+        "UUID": "UUID_HERE"
     }
 ]

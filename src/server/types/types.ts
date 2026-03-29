@@ -4,5 +4,3 @@
 //     UUID: string;
 //     passwordHash: string;
 // }
-
-export {};
