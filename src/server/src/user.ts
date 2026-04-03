@@ -10,4 +10,8 @@ export class User {
         this.passwordHash = passwordHash;
         this.UUID = UUID || crypto.randomUUID();
     }
+
+    // verifyPassword(password: string): boolean {
+    //     return this.passwordHash === hashPassword(password);
+    // }
 }

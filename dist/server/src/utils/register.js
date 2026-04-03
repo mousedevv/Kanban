@@ -1,16 +1,18 @@
 import { User } from "../user.js";
 import { hashPassword } from "../auth/hash.js";
-import { saveUsers } from "../files/loadAndSaveUsers.js";
-import { users } from "../../index.js";
-export function register(username, password) {
+import { DBUsersService } from "../db/usersDB.js";
+const USERNAME_REGEX = /^(?=.*[A-Za-z]).{3,20}$/;
+const PASSWORD_REGEX = /^\S{8,}$/;
+export async function register(username, password) {
     if (!username || !password)
-        throw new Error("Missing username or password");
-    // TODO
-    // Do it using username (findUserByUsername)
-    // const existingUser = findUserByPassword(password);
-    // if (existingUser) throw new Error("User already exists");
+        throw new Error("MISSING_DATA");
+    else if (await DBUsersService.findUserByUsername(username))
+        throw new Error("USER_ALREADY_EXISTS");
+    else if (!USERNAME_REGEX.test(username))
+        throw new Error("REGEX_INVALID_USERNAME");
+    else if (!PASSWORD_REGEX.test(password))
+        throw new Error("REGEX_INVALID_PASSWORD");
     const user = new User(username, hashPassword(password));
-    users.push(user);
-    saveUsers();
+    await DBUsersService.addUser(user);
     return user;
 }

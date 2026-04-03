@@ -6,8 +6,8 @@ if (document.cookie) {
 }
 
 loginBtn.addEventListener("click", () => {
-    window.location.href = "../login";
+    window.location.href = "../login/login";
 });
 registerBtn.addEventListener("click", () => {
-    window.location.href = "../register";
+    window.location.href = "../login/register";
 });

@@ -1,7 +1,17 @@
 [
     {
         "username": "adminxdd",
-        "passwordHash": "PASSWORD_HASH_HERE",
-        "UUID": "UUID_HERE"
+        "passwordHash": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+        "UUID": "6b559b2e-ce6c-452b-9f1c-f7a26adc3122"
+    },
+    {
+        "username": "ssssssss",
+        "passwordHash": "91f2c894108b8a86c918d21939ffc33b972d3a25d2dfa9772ef2dd995c7aca42",
+        "UUID": "907b38eb-fc8d-4017-9532-ae9999d82fe9"
+    },
+    {
+        "username": "super_użytkownik",
+        "passwordHash": "91f2c894108b8a86c918d21939ffc33b972d3a25d2dfa9772ef2dd995c7aca42",
+        "UUID": "1e74c082-61d7-4c89-a2bf-8766b6fb4751"
     }
 ]

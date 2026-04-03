@@ -1,4 +1,4 @@
 import { hashPassword } from "./hash";
-export function comparePassword(password, passwordHash) {
-    return passwordHash === hashPassword(password);
+export function verifyPassword(password, user) {
+    return user.passwordHash === hashPassword(password);
 }
