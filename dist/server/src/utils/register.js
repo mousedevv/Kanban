@@ -1,6 +1,6 @@
-import { User } from "../user.js";
+import { User } from "../../types/user.js";
 import { hashPassword } from "../auth/hash.js";
-import { DBUsersService } from "../db/usersDB.js";
+import { DBUsersService } from "../db/usersService.js";
 const USERNAME_REGEX = /^(?=.*[A-Za-z]).{3,20}$/;
 const PASSWORD_REGEX = /^\S{8,}$/;
 export async function register(username, password) {

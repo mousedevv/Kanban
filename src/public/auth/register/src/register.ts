@@ -11,6 +11,7 @@ const dom = {
     username: $("#username") as HTMLInputElement,
     password: $("#password") as HTMLInputElement,
     confirmPassword: $("#confirmPassword") as HTMLInputElement,
+    confirmBtn: $(".registerBtn") as HTMLButtonElement,
 };
 
 dom.form.addEventListener("submit", async (e) => {
@@ -45,7 +46,15 @@ dom.form.addEventListener("submit", async (e) => {
         return;
     }
 
-    console.log("Conditions met, sending request...");
+    // Limit requests - disable button for 1.5s after request
+    dom.confirmBtn.disabled = true;
+    dom.confirmBtn.style.filter = "blur(2px)";
+    dom.confirmBtn.classList.remove("animateOnHover");
+    setTimeout(() => {
+        dom.confirmBtn.disabled = false;
+        dom.confirmBtn.style.filter = "none";
+        dom.confirmBtn.classList.add("animateOnHover");
+    }, 1.5 * 1000);
 
     // window.location.origin to prevent fetching from 
     // "login/register/api/register" (relative path)
@@ -60,12 +69,19 @@ dom.form.addEventListener("submit", async (e) => {
         }),
     });
 
-    const data = await res.json();
-
-    if (!res.ok) {
-        notification(data.message, "warning");
+    // Handle errors
+    if (res.status === 409) {
+        notification("Username is taken - try another one!", "warning");
+        return;
+    } else if (res.status === 429) {
+        notification("Too many attempts - try again later!", "warning");
+        return;
+    } else if (!res.ok) {
+        notification("Something went wrong - try again later!", "warning");
         return;
     }
+
+    const data = await res.json();
 
     saveUserToLocalStorage(data.username, data.UUID);
 

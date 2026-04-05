@@ -1,4 +1,4 @@
-import { DBUsersService } from "../db/usersDB.js";
+import { DBUsersService } from "../db/usersService.js";
 export async function authorize(username, password) {
     const user = await DBUsersService.findUserByUsername(username);
     if (!user)

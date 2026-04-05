@@ -8,6 +8,7 @@ const dom = {
     username: $("#username"),
     password: $("#password"),
     confirmPassword: $("#confirmPassword"),
+    confirmBtn: $(".registerBtn"),
 };
 dom.form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -35,7 +36,15 @@ dom.form.addEventListener("submit", async (e) => {
         notification("Passwords must match!", "warning");
         return;
     }
-    console.log("Conditions met, sending request...");
+    // Limit requests - disable button for 1.5s after request
+    dom.confirmBtn.disabled = true;
+    dom.confirmBtn.style.filter = "blur(2px)";
+    dom.confirmBtn.classList.remove("animateOnHover");
+    setTimeout(() => {
+        dom.confirmBtn.disabled = false;
+        dom.confirmBtn.style.filter = "none";
+        dom.confirmBtn.classList.add("animateOnHover");
+    }, 1.5 * 1000);
     // window.location.origin to prevent fetching from 
     // "login/register/api/register" (relative path)
     const res = await fetch(window.location.origin + "/api/register", {
@@ -48,11 +57,20 @@ dom.form.addEventListener("submit", async (e) => {
             password: password,
         }),
     });
-    const data = await res.json();
-    if (!res.ok) {
-        notification(data.message, "warning");
+    // Handle errors
+    if (res.status === 409) {
+        notification("Username is taken - try another one!", "warning");
         return;
     }
+    else if (res.status === 429) {
+        notification("Too many attempts - try again later!", "warning");
+        return;
+    }
+    else if (!res.ok) {
+        notification("Something went wrong - try again later!", "warning");
+        return;
+    }
+    const data = await res.json();
     saveUserToLocalStorage(data.username, data.UUID);
     window.location.href = "/home";
 });

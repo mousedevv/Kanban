@@ -24,9 +24,7 @@ body {
 
 .windowContent {
     height: 100%;
-    width: 100%;
-    margin-top: -15px;
-    
+    width: 100%;    
 }
 
 input {
@@ -43,6 +41,10 @@ input {
     box-shadow: 0px 0px 5px 2px var(--shadow-color);
 }
 
+::placeholder {
+    color: #4646465b;
+}
+
 button {
     background-color: var(--accent-color);
     color: var(--text);
@@ -57,7 +59,8 @@ button {
     margin-bottom: -5px;
 }
 
-.register {
+.register, 
+.login {
     gap: 25px;
 }
 
@@ -65,7 +68,9 @@ button {
     gap: 5px;
 }
 
-.registerBtn {
+.registerBtn,
+.loginBtn {
+    cursor: pointer;
     background-color: var(--background-color);
     color: var(--accent-color);
     border: 1px solid var(--accent-color);

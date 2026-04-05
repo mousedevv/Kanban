@@ -2,10 +2,12 @@ import dotenv from 'dotenv';
 import express from "express";
 import cors from "cors";
 import mysql2 from "mysql2/promise";
+import rateLimit from "express-rate-limit";
 import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
+import { DBProjectsService } from './src/db/projectsService.js';
 import { hashPassword } from "./src/auth/hash.js";
 import { register } from "./src/utils/register.js";
 import { authorize } from "./src/auth/authorization.js";
@@ -21,7 +23,7 @@ const PUBLIC_PATHS = [
     '/assets',
     '/errors',
     '/favicon.ico',
-    "/login",
+    "/auth",
     "/cookiesUtils",
     "/utils",
     "/api/register",
@@ -32,7 +34,7 @@ const PUBLIC_PATHS = [
 ];
 const SKIPPED_PATHS_WHEN_LOGGED_IN = [
     '/welcome',
-    '/login',
+    '/auth',
 ];
 const URL = process.env.URL;
 const PORT = process.env.PORT;
@@ -45,6 +47,14 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
+// Limit login attempts - maximum of 10 attempts in 15 minutes
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10, // only 10 attempts to log in in 15 minutes
+    handler: (req, res) => {
+        res.sendStatus(429);
+    }
+});
 // Authentication middleware
 app.use((req, res, next) => {
     // Check if the request route is public
@@ -90,27 +100,30 @@ async function testDB() {
         console.log('[MySQL] Connected to DB successfully.');
     }
     catch (e) {
-        console.log('[MySQL] Error:', e.message);
+        throw new Error(`[MySQL] Fatal Error`);
     }
 }
 testDB();
-// TEST ENDPOINTS - DEBUG - REMOVE AFTER
-app.get('/api/create-test-session', (req, res) => {
-    req.session.user = {
-        username: 'test',
-        UUID: 'testUUID',
-        passwordHash: 'testHash'
-    };
-    res.send('session set');
-});
-app.get('/api/check-session', (req, res) => {
-    res.json(req.session.user || null);
-});
-app.post("/api/register", async (req, res) => {
+// only for development
+if (process.env.NODE_ENV === 'development') {
+    // TEST ENDPOINTS - DEBUG - REMOVE AFTER
+    app.get('/api/create-test-session', (req, res) => {
+        req.session.user = {
+            username: 'test',
+            UUID: 'testUUID',
+            passwordHash: 'testHash'
+        };
+        res.send('session set');
+    });
+    app.get('/api/check-session', (req, res) => {
+        res.json(req.session.user || null);
+    });
+}
+app.post("/api/register", loginLimiter, async (req, res) => {
     try {
         const user = await register(req.body.username, req.body.password);
         req.session.user = user;
-        console.log("[/api/register] User registered:", user);
+        console.log("[HTTP /api/register] User registered:", user);
         return res.json({
             user: { username: user.username, UUID: user.UUID },
         });
@@ -120,33 +133,41 @@ app.post("/api/register", async (req, res) => {
             case "MISSING_DATA":
             case "REGEX_INVALID_USERNAME":
             case "REGEX_INVALID_PASSWORD":
-                return res.status(400);
+                return res.sendStatus(400);
             case "USER_ALREADY_EXISTS":
-                return res.status(409);
+                return res.sendStatus(409);
         }
     }
 });
-app.post("/api/login", async (req, res) => {
+app.post("/api/login", loginLimiter, async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     const authorizedUser = await authorize(username, password);
     if (!authorizedUser)
-        return res.status(403);
+        return res.sendStatus(403);
     req.session.user = authorizedUser;
-    console.log("[/api/login] User logged in:", authorizedUser);
+    console.log("[HTTP /api/login] User logged in:", authorizedUser);
     return res.json({
         user: { username: authorizedUser.username, UUID: authorizedUser.UUID },
     });
 });
 app.get('/api/logout', (req, res) => {
     // Log user before destroying session
-    console.log("[/api/logout] User logged out:", req.session.user);
+    console.log("[HTTP /api/logout] User logged out:", req.session.user);
     // @ts-ignore
     // remove session from database
     req.session.destroy();
     // clear client cookie
     res.clearCookie('connect.sid');
     return res.json("session destroyed");
+});
+app.post('/api/create-project', async (req, res) => {
+    const name = req.body.name;
+    const description = req.body.description || "";
+    if (!name)
+        return res.sendStatus(400);
+    const project = await DBProjectsService.createProject(name, description);
+    return res.json({ project: project });
 });
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

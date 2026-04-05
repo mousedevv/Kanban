@@ -2,14 +2,17 @@ import dotenv from 'dotenv';
 import express from "express";
 import cors from "cors";
 import mysql2 from "mysql2/promise";
+import rateLimit from "express-rate-limit";
 
 import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 
-import { User } from "./src/user.js";
-import { DBUsersService } from "./src/db/usersDB.js";
+import { User } from "./types/user.js";
+import { Project } from "./types/project.js";
+import { DBUsersService } from "./src/db/usersService.js";
+import { DBProjectsService } from './src/db/projectsService.js';
 import { hashPassword } from "./src/auth/hash.js";
 import { register } from "./src/utils/register.js";
 import { authorize } from "./src/auth/authorization.js";
@@ -30,7 +33,7 @@ const PUBLIC_PATHS = [
     '/assets',
     '/errors',
     '/favicon.ico',
-    "/login",
+    "/auth",
     "/cookiesUtils",
     "/utils",
     "/api/register",
@@ -42,7 +45,7 @@ const PUBLIC_PATHS = [
 
 const SKIPPED_PATHS_WHEN_LOGGED_IN = [
     '/welcome',
-    '/login',
+    '/auth',
 ];
 
 const URL = process.env.URL;
@@ -60,6 +63,15 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+// Limit login attempts - maximum of 10 attempts in 15 minutes
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,  // only 10 attempts to log in in 15 minutes
+    handler: (req, res) => {
+        res.sendStatus(429);
+    }
+});
 
 // Authentication middleware
 app.use((req, res, next) => {
@@ -87,7 +99,7 @@ app.use((req, res, next) => {
     if (
         !fs.existsSync(path.join(__dirname, `../public${req.path}`)) &&
         !req.path.startsWith("/api")
-    ) {     
+    ) {
         return res.redirect('/errors/404');
     }
 
@@ -117,32 +129,35 @@ async function testDB() {
         await db.query('SELECT 1 AS test');
         console.log('[MySQL] Connected to DB successfully.');
     } catch (e: Error | any) {
-        console.log('[MySQL] Error:', e.message);
+        throw new Error(`[MySQL] Fatal Error`);
     }
 }
 
 testDB();
 
-// TEST ENDPOINTS - DEBUG - REMOVE AFTER
-app.get('/api/create-test-session', (req, res) => {
-    req.session.user = {
-        username: 'test',
-        UUID: 'testUUID',
-        passwordHash: 'testHash'
-    };
+// only for development
+if (process.env.NODE_ENV === 'development') {
+    // TEST ENDPOINTS - DEBUG - REMOVE AFTER
+    app.get('/api/create-test-session', (req, res) => {
+        req.session.user = {
+            username: 'test',
+            UUID: 'testUUID',
+            passwordHash: 'testHash'
+        };
 
-    res.send('session set');
-});
+        res.send('session set');
+    });
 
-app.get('/api/check-session', (req, res) => {
-    res.json(req.session.user || null);
-});
+    app.get('/api/check-session', (req, res) => {
+        res.json(req.session.user || null);
+    });
+}
 
-app.post("/api/register", async (req, res) => {
+app.post("/api/register", loginLimiter, async (req, res) => {
     try {
         const user = await register(req.body.username, req.body.password);
         req.session.user = user;
-        console.log("[/api/register] User registered:", user);
+        console.log("[HTTP /api/register] User registered:", user);
         return res.json(
             {
                 user: { username: user.username, UUID: user.UUID },
@@ -153,24 +168,24 @@ app.post("/api/register", async (req, res) => {
             case "MISSING_DATA":
             case "REGEX_INVALID_USERNAME":
             case "REGEX_INVALID_PASSWORD":
-                return res.status(400);
+                return res.sendStatus(400);
             case "USER_ALREADY_EXISTS":
-                return res.status(409);
+                return res.sendStatus(409);
         }
     }
 });
 
-app.post("/api/login", async (req, res) => {
+app.post("/api/login", loginLimiter, async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
     const authorizedUser = await authorize(username, password);
 
-    if (!authorizedUser) return res.status(403);
+    if (!authorizedUser) return res.sendStatus(403);
 
     req.session.user = authorizedUser;
 
-    console.log("[/api/login] User logged in:", authorizedUser);
+    console.log("[HTTP /api/login] User logged in:", authorizedUser);
 
     return res.json(
         {
@@ -181,8 +196,8 @@ app.post("/api/login", async (req, res) => {
 
 app.get('/api/logout', (req, res) => {
     // Log user before destroying session
-    console.log("[/api/logout] User logged out:", req.session.user);
-    
+    console.log("[HTTP /api/logout] User logged out:", req.session.user);
+
     // @ts-ignore
     // remove session from database
     req.session.destroy();
@@ -191,6 +206,17 @@ app.get('/api/logout', (req, res) => {
     res.clearCookie('connect.sid');
 
     return res.json("session destroyed");
+});
+
+app.post('/api/create-project', async (req, res) => {
+    const name = req.body.name;
+    const description = req.body.description || "";
+
+    if (!name) return res.sendStatus(400);
+
+    const project: Project = await DBProjectsService.createProject(name, description);
+
+    return res.json({project: project});
 });
 
 app.listen(PORT, (): void => {

@@ -1,6 +1,6 @@
 import { db } from "../../index.js";
 
-import { User } from "../user.js";
+import { User } from "../../types/user.js";
 import { userRow } from "../../types/types.js";
 import { hashPassword } from "../auth/hash.js";
 
