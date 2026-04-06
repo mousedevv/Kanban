@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mousedevv/Kanban.git"
@@ -30,5 +27,9 @@
     "express-rate-limit": "^8.3.2",
     "express-session": "^1.19.0",
     "mysql2": "^3.20.0"
+  },
+  "scripts": {
+    "dev": "node --env-file=.env --watch ./dist/server/index.js",
+    "start": "node --env-file=.env ./dist/server/index.js"
   }
 }

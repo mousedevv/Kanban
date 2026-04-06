@@ -1,3 +1,5 @@
+import { ResultSetHeader } from "mysql2";
+
 import { db } from "../../index.js";
 
 import { User } from "../../types/user.js";
@@ -8,10 +10,13 @@ import { hashPassword } from "../auth/hash.js";
 export const DBUsersService = {
     // Add user to DB
     async addUser(user: User) {
-        await db.execute(
+        const [rows] = await db.execute<ResultSetHeader>(
             "INSERT INTO users (username, passwordHash, UUID) VALUES (?, ?, ?)",
             [user.username, user.passwordHash, user.UUID]
         );
+
+        // Return new user ID from db
+        return rows.insertId;
     },
 
     // Verify user (compare passwords)
@@ -30,7 +35,7 @@ export const DBUsersService = {
             const [rows] = await db.execute<userRow[]>(
                 "SELECT * FROM users WHERE UUID = ?", [UUID]
             );
-            if (rows[0].length === 0) return UUID;
+            if (!rows[0] || rows[0].length === 0) return UUID;
         }
     },
 

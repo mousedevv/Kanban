@@ -1,5 +1,6 @@
 export class User {
-    constructor(username, passwordHash, UUID) {
+    constructor(id, username, passwordHash, UUID) {
+        this.id = id;
         this.username = username;
         this.passwordHash = passwordHash;
         this.UUID = UUID;

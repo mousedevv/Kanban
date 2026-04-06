@@ -4,7 +4,9 @@ import { hashPassword } from "../auth/hash.js";
 export const DBUsersService = {
     // Add user to DB
     async addUser(user) {
-        await db.execute("INSERT INTO users (username, passwordHash, UUID) VALUES (?, ?, ?)", [user.username, user.passwordHash, user.UUID]);
+        const [rows] = await db.execute("INSERT INTO users (username, passwordHash, UUID) VALUES (?, ?, ?)", [user.username, user.passwordHash, user.UUID]);
+        // Return new user ID from db
+        return rows.insertId;
     },
     // Verify user (compare passwords)
     async verifyUser(user, password) {
@@ -17,7 +19,7 @@ export const DBUsersService = {
         while (true) {
             const UUID = crypto.randomUUID();
             const [rows] = await db.execute("SELECT * FROM users WHERE UUID = ?", [UUID]);
-            if (rows[0].length === 0)
+            if (!rows[0] || rows[0].length === 0)
                 return UUID;
         }
     },

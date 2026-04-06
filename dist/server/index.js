@@ -2,21 +2,23 @@ import dotenv from 'dotenv';
 import express from "express";
 import cors from "cors";
 import mysql2 from "mysql2/promise";
-import rateLimit from "express-rate-limit";
 import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
-import { DBProjectsService } from './src/db/projectsService.js';
-import { hashPassword } from "./src/auth/hash.js";
-import { register } from "./src/utils/register.js";
-import { authorize } from "./src/auth/authorization.js";
-import { initSessionMiddleware } from "./src/init/session.js";
-export let test = [];
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 // Load environment variables
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+import { hashPassword } from "./src/auth/hash.js";
+import { register } from "./src/utils/register.js";
+import { authorize } from "./src/auth/authorization.js";
+// Routers
+import authRouter from "./src/routes/auth.js";
+import projectRouter from "./src/routes/project.js";
+import testsRouter from "./src/routes/tests.js";
+import { initSessionMiddleware } from "./src/init/session.js";
+export let test = [];
 export const PUBLIC_PATH = path.join(__dirname, "../public");
 const PUBLIC_PATHS = [
     '/welcome',
@@ -47,14 +49,6 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
-// Limit login attempts - maximum of 10 attempts in 15 minutes
-const loginLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 10, // only 10 attempts to log in in 15 minutes
-    handler: (req, res) => {
-        res.sendStatus(429);
-    }
-});
 // Authentication middleware
 app.use((req, res, next) => {
     // Check if the request route is public
@@ -107,68 +101,12 @@ testDB();
 // only for development
 if (process.env.NODE_ENV === 'development') {
     // TEST ENDPOINTS - DEBUG - REMOVE AFTER
-    app.get('/api/create-test-session', (req, res) => {
-        req.session.user = {
-            username: 'test',
-            UUID: 'testUUID',
-            passwordHash: 'testHash'
-        };
-        res.send('session set');
-    });
-    app.get('/api/check-session', (req, res) => {
-        res.json(req.session.user || null);
-    });
+    app.use('/api', testsRouter);
 }
-app.post("/api/register", loginLimiter, async (req, res) => {
-    try {
-        const user = await register(req.body.username, req.body.password);
-        req.session.user = user;
-        console.log("[HTTP /api/register] User registered:", user);
-        return res.json({
-            user: { username: user.username, UUID: user.UUID },
-        });
-    }
-    catch (e) {
-        switch (e.message) {
-            case "MISSING_DATA":
-            case "REGEX_INVALID_USERNAME":
-            case "REGEX_INVALID_PASSWORD":
-                return res.sendStatus(400);
-            case "USER_ALREADY_EXISTS":
-                return res.sendStatus(409);
-        }
-    }
-});
-app.post("/api/login", loginLimiter, async (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-    const authorizedUser = await authorize(username, password);
-    if (!authorizedUser)
-        return res.sendStatus(403);
-    req.session.user = authorizedUser;
-    console.log("[HTTP /api/login] User logged in:", authorizedUser);
-    return res.json({
-        user: { username: authorizedUser.username, UUID: authorizedUser.UUID },
-    });
-});
-app.get('/api/logout', (req, res) => {
-    // Log user before destroying session
-    console.log("[HTTP /api/logout] User logged out:", req.session.user);
-    // @ts-ignore
-    // remove session from database
-    req.session.destroy();
-    // clear client cookie
-    res.clearCookie('connect.sid');
-    return res.json("session destroyed");
-});
-app.post('/api/create-project', async (req, res) => {
-    const name = req.body.name;
-    const description = req.body.description || "";
-    if (!name)
-        return res.sendStatus(400);
-    const project = await DBProjectsService.createProject(name, description);
-    return res.json({ project: project });
-});
+// Routes
+app.use('/api', authRouter);
+app.use('/api', projectRouter);
+app.use('/api', testsRouter);
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
