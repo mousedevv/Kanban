@@ -1,15 +1,7 @@
 import { Router } from "express";
-// import dotenv from 'dotenv';
-// import path from "path";
-// import { dirname } from "path";
-// import { fileURLToPath } from "url";
 import { DBProjectsService } from "../db/projectsService.js";
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
-// dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
 const router = Router();
-// DEBUG
-console.log(process.env.NODE_ENV);
+console.log(`Starting in ${process.env.NODE_ENV} mode...`);
 if (process.env.NODE_ENV === 'development') {
     // TEST ENDPOINTS - DEBUG - REMOVE AFTER
     router.get('/create-test-session', (req, res) => {

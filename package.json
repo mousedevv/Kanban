@@ -29,7 +29,8 @@
     "mysql2": "^3.20.0"
   },
   "scripts": {
-    "dev": "node --env-file=.env --watch ./dist/server/index.js",
+    
+    "tunnel": "ssh -L 3307:127.0.0.1:3306 mouse@s3.small.pl",
     "start": "node --env-file=.env ./dist/server/index.js"
   }
 }

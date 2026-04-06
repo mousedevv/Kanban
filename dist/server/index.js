@@ -1,15 +1,12 @@
-import dotenv from 'dotenv';
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import mysql2 from "mysql2/promise";
-import path from "path";
-import { dirname } from "path";
 import { fileURLToPath } from "url";
+import { dirname } from "path";
+import path from "path";
 import fs from "fs";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-// Load environment variables
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+// Authorization utils
 import { hashPassword } from "./src/auth/hash.js";
 import { register } from "./src/utils/register.js";
 import { authorize } from "./src/auth/authorization.js";
@@ -18,6 +15,8 @@ import authRouter from "./src/routes/auth.js";
 import projectRouter from "./src/routes/project.js";
 import testsRouter from "./src/routes/tests.js";
 import { initSessionMiddleware } from "./src/init/session.js";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 export let test = [];
 export const PUBLIC_PATH = path.join(__dirname, "../public");
 const PUBLIC_PATHS = [
@@ -85,6 +84,7 @@ export const db = mysql2.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
+    port: Number(process.env.DB_PORT),
     waitForConnections: true,
     connectionLimit: 10
 });
@@ -94,7 +94,9 @@ async function testDB() {
         console.log('[MySQL] Connected to DB successfully.');
     }
     catch (e) {
-        throw new Error(`[MySQL] Fatal Error`);
+        // debug
+        console.log(e);
+        // throw new Error(`[MySQL] Fatal Error`);
     }
 }
 testDB();

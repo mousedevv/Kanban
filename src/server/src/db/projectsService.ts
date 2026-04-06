@@ -6,15 +6,24 @@ import { User } from "../../types/user.js";
 
 export const DBProjectsService = {
     async generateUUID(): Promise<string> {
-            while (true) {
-                const UUID = crypto.randomUUID();
-                const [rows] = await db.execute<userRow[]>(
-                    `SELECT * FROM projects WHERE UUID = ?`, [UUID]
-                );
+        while (true) {
+            const UUID = crypto.randomUUID();
+            const [rows] = await db.execute<userRow[]>(
+                `SELECT * FROM projects WHERE UUID = ?`, [UUID]
+            );
 
-                if (!rows[0] || rows[0].length === 0) return UUID;
-            }
-        },
+            if (!rows[0] || rows[0].length === 0) return UUID;
+        }
+    },
+
+    async authorizeProjectAccess(user: User, projectUUID: string) {
+        const [rows] = await db.execute<userRow[]>(
+            `SELECT * FROM user_projects WHERE user_id = ? AND project_id = ?`, [user.id, projectUUID]
+        );
+
+        if (rows[0].length > 0) return rows[0].role;
+        else throw new Error("Forbidden");
+    },
 
     async createProject(name: string, description: string, user: User) {
         const UUID = await this.generateUUID();
@@ -33,5 +42,17 @@ export const DBProjectsService = {
         );
 
         return new Project(name, description, UUID);
+    },
+
+    async getProject(user: User, UUID: string) {
+        const role = await this.authorizeProjectAccess(user, UUID);
+
+        const [rows] = await db.execute<projectRow[]>(`SELECT * FROM projects WHERE UUID = ?`, [UUID]);
+
+        if (!rows[0] || rows[0].length === 0) {
+            throw new Error("Project not found");
+        }
+
+        return rows[0];
     }
 }

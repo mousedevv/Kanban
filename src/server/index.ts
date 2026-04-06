@@ -1,23 +1,15 @@
-import dotenv from 'dotenv';
+import "dotenv/config";
+
 import express from "express";
 import cors from "cors";
 import mysql2 from "mysql2/promise";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 import path from "path";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
 import fs from "fs";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Load environment variables
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
-
-import { User } from "./types/user.js";
-import { Project } from "./types/project.js";
-import { DBUsersService } from "./src/db/usersService.js";
-import { DBProjectsService } from './src/db/projectsService.js';
+// Authorization utils
 import { hashPassword } from "./src/auth/hash.js";
 import { register } from "./src/utils/register.js";
 import { authorize } from "./src/auth/authorization.js";
@@ -28,6 +20,9 @@ import projectRouter from "./src/routes/project.js";
 import testsRouter from "./src/routes/tests.js";
 
 import { initSessionMiddleware } from "./src/init/session.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 export let test: string[] = [];
 
@@ -111,10 +106,11 @@ app.use(express.static(PUBLIC_PATH));
 
 // Connect to database
 export const db = mysql2.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
+    host: process.env.DB_HOST!,
+    user: process.env.DB_USER!,
+    password: process.env.DB_PASSWORD!,
+    database: process.env.DB_DATABASE!,
+    port: Number(process.env.DB_PORT!),
     waitForConnections: true,
     connectionLimit: 10
 });
@@ -124,7 +120,9 @@ async function testDB() {
         await db.query('SELECT 1 AS test');
         console.log('[MySQL] Connected to DB successfully.');
     } catch (e: Error | any) {
-        throw new Error(`[MySQL] Fatal Error`);
+        // debug
+        console.log(e);
+        // throw new Error(`[MySQL] Fatal Error`);
     }
 }
 
