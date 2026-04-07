@@ -19,7 +19,7 @@ export function initSessionMiddleware() {
             httpOnly: true,
             // Secure only work on HTTPS
             secure: (process.env.NODE_ENV === 'production') ? true : false,
-            sameSite: 'strict',
+            sameSite: 'none',
             // 14 days
             maxAge: 14 * 24 * 60 * 60 * 1000
         }

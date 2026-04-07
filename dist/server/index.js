@@ -40,6 +40,8 @@ const SKIPPED_PATHS_WHEN_LOGGED_IN = [
 const URL = process.env.URL;
 const PORT = process.env.PORT;
 export const app = express();
+// Fix proxy connections
+app.set("trust proxy", 1);
 // Initialize app.use(session()) middleware instantly after server starts
 // (session middleware)
 app.use(initSessionMiddleware());
@@ -94,9 +96,8 @@ async function testDB() {
         console.log('[MySQL] Connected to DB successfully.');
     }
     catch (e) {
-        // debug
         console.log(e);
-        // throw new Error(`[MySQL] Fatal Error`);
+        throw new Error(`[MySQL] Fatal Error`);
     }
 }
 testDB();
