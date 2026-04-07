@@ -52,6 +52,9 @@ const PORT = process.env.PORT;
 
 export const app = express();
 
+// Fix proxy connections
+app.set("trust proxy", 1);
+
 // Initialize app.use(session()) middleware instantly after server starts
 // (session middleware)
 app.use(initSessionMiddleware());
@@ -120,9 +123,8 @@ async function testDB() {
         await db.query('SELECT 1 AS test');
         console.log('[MySQL] Connected to DB successfully.');
     } catch (e: Error | any) {
-        // debug
         console.log(e);
-        // throw new Error(`[MySQL] Fatal Error`);
+        throw new Error(`[MySQL] Fatal Error`);
     }
 }
 
