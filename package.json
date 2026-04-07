@@ -1,0 +1,36 @@
+{
+  "name": "kanban",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mousedevv/Kanban.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/mousedevv/Kanban/issues"
+  },
+  "homepage": "https://github.com/mousedevv/Kanban#readme",
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/express-mysql-session": "^3.0.8",
+    "@types/express-session": "^1.18.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express-mysql-session": "^3.0.3",
+    "express-rate-limit": "^8.3.2",
+    "express-session": "^1.19.0",
+    "mysql2": "^3.20.0"
+  },
+  "scripts": {
+    
+    "tunnel": "ssh -L 3307:127.0.0.1:3306 mouse@s3.small.pl",
+    "start": "node --env-file=.env ./dist/server/index.js"
+  }
+}

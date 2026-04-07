@@ -1,0 +1,53 @@
+:root {
+    --background-color: #11151C;
+    --secondary-color: #121a20;
+    --accent-color: #4464AD;
+    --text: #FFFFFF;
+    --kanban-text: #c6c90f;
+    --kanban-not-important-text: #bfce3d;
+    --shadow-color: rgba(198, 201, 15, 0.3);
+    --not-important-text: #464646;
+}
+
+.flex, .flexCol {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flexCol {
+    flex-direction: column;
+}
+
+.flexColNotCenter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.animateOnHover {
+    transform: scale(1);
+    transition: 250ms ease-in;
+}
+
+.animateOnHover:hover {
+    transform: scale(1.10);
+}
+
+body {
+    font-family: "Inter", sans-serif;
+    color: var(--accent-color);
+    background-color: var(--background-color);
+}
+
+.appName {
+    color: var(--kanban-text)
+}
+
+.appNameSmaller {
+    color: var(--kanban-not-important-text);
+}

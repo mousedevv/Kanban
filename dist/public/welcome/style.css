@@ -1,0 +1,27 @@
+body {
+    text-align: center;
+}
+
+p {
+    color: var(--not-important-text);
+}
+
+h2 {
+    margin-top: -15px;
+}
+
+.controlBtnsWrapper {
+    gap: 15px;
+}
+
+
+.btn {
+    padding: 15px;
+    width: 200px;
+    cursor: pointer;
+    border-radius: 15px;
+    background-color: var(--accent-color);
+    border: none;
+    font-size: 30px;
+    font-weight: 700;
+}
