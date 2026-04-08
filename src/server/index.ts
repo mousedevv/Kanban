@@ -24,8 +24,6 @@ import { initSessionMiddleware } from "./src/init/session.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export let test: string[] = [];
-
 export const PUBLIC_PATH = path.join(__dirname, "../public");
 const PUBLIC_PATHS = [
     '/welcome',
@@ -153,4 +151,3 @@ app.listen(PORT, (): void => {
 (globalThis as any).hashPassword = hashPassword;
 (globalThis as any).authorize = authorize;
 (globalThis as any).db = db;
-(globalThis as any).test = test;

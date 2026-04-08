@@ -1,12 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kanban - Home page</title>
+    <link rel="stylesheet" href="../assets/global-css/fonts.css">
+    <link rel="stylesheet" href="../assets/global-css/default.css">
     <link rel="stylesheet" href="style.css">
+    <script type="module" src="./src/home.js"></script>
 </head>
+
 <body>
-    
+    <nav class="flex">
+        <div class="menuBtn">☰</div>
+        <h1 class="appName">kanban.</h1>
+    </nav>
+
+    <div class="sidebar flexColNotCenter">
+        <h2>Your projects</h2>
+        <div class="projectBtnWrapper">
+            <button class="btn">Project 1</button>
+            <button class="btn">Project 2</button>
+        </div>
+    </div>
+
+    <div class="colsWrapper">
+        <div class="col">
+            <div class="titleRow">
+                <div class="colTitle" contenteditable="">Column 1 title</div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="titleRow">
+                <div class="colTitle" contenteditable="">Column 2 title</div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="titleRow">
+                <div class="colTitle" contenteditable="">Column 3 title</div>
+            </div>
+        </div>
+    </div>
+
 </body>
+
 </html>

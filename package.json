@@ -1,6 +1,6 @@
 {
   "name": "kanban",
-  "version": "1.0.0",
+  "version": "DEV 0.2.0",
   "description": "",
   "main": "index.js",
   "repository": {
@@ -14,7 +14,7 @@
   "bugs": {
     "url": "https://github.com/mousedevv/Kanban/issues"
   },
-  "homepage": "https://github.com/mousedevv/Kanban#readme",
+  "homepage": "https://github.com/mousedevv/Kanban",
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
@@ -29,8 +29,8 @@
     "mysql2": "^3.20.0"
   },
   "scripts": {
-    
     "tunnel": "ssh -L 3307:127.0.0.1:3306 mouse@s3.small.pl",
-    "start": "node --env-file=.env ./dist/server/index.js"
+    "faststart": "node --env-file=.env ./dist/server/index.js",
+    "start": "npm install && tsc && node --env-file=.env ./dist/server/index.js"
   }
 }

@@ -17,7 +17,6 @@ import testsRouter from "./src/routes/tests.js";
 import { initSessionMiddleware } from "./src/init/session.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-export let test = [];
 export const PUBLIC_PATH = path.join(__dirname, "../public");
 const PUBLIC_PATHS = [
     '/welcome',
@@ -121,4 +120,3 @@ globalThis.fs = fs;
 globalThis.hashPassword = hashPassword;
 globalThis.authorize = authorize;
 globalThis.db = db;
-globalThis.test = test;

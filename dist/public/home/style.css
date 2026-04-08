@@ -1,0 +1,146 @@
+/* DEFAULTS */
+body {
+    margin: 0;
+    display: flex;
+}
+
+.btn {
+    width: 100%;
+}
+
+
+
+
+/* NAV & menuBtn (mobile only) */
+nav {
+    z-index: 2000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 5px 5px 5px 15px;
+    width: 100vw;
+    height: var(--nav-height);
+    display: flex;
+    align-items: center;
+    background-color: var(--accent-color);
+}
+
+.menuBtn {
+    position: fixed;
+    top: 4px;
+    left: 15px;
+    display: none;
+    color: white;
+    font-size: 35px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+
+
+
+/* SIDEBAR */
+.sidebar {
+    z-index: 1500;
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    width: 250px;
+    height: calc(100vh - var(--nav-height));
+    overflow-y: auto;
+    background: var(--secondary-color);
+    color: white;
+    padding: 20px;
+    transition: transform 0.3s;
+}
+
+.projectBtnWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+    margin: 0;
+}
+
+
+
+
+
+
+/* MAIN SCREEN (COLUMNS) */
+.colsWrapper {
+    display: flex;
+    flex: 1;
+    padding: 20px;
+    margin-left: 300px;
+    background-color: red;
+    margin-top: var(--nav-height);
+    flex-wrap: nowrap;
+}
+
+.col {
+    position: relative;
+    display: inline-block;
+    background-color: green;
+    padding: 15px;
+    background-color: var(--secondary-color);
+    color: white;
+    border-radius: 5px;
+    width: 200px;
+    margin-right: 20px;
+}
+
+.colTitle {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.menu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background: #333;
+    color: white;
+    padding: 10px;
+    display: none;
+    white-space: nowrap;
+}
+
+.menu.active {
+    display: block;
+}
+
+
+
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 768px) {
+    body {
+        display: block;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: var(--nav-height);
+        left: 0;
+        width: 250px;
+        height: calc(100vh - var(--nav-height));
+        transform: translateX(-100%);
+        transition: 0.3s;
+        z-index: 1000;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .colsWrapper {
+        margin-left: 0;
+    }
+
+    .menuBtn {
+        display: block;
+    }
+}
