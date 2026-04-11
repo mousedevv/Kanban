@@ -22,11 +22,13 @@
     "@types/express-session": "^1.18.2"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "dotenv": "^17.3.1",
     "express-mysql-session": "^3.0.3",
     "express-rate-limit": "^8.3.2",
     "express-session": "^1.19.0",
-    "mysql2": "^3.20.0"
+    "mysql2": "^3.20.0",
+    "tippy.js": "^6.3.7"
   },
   "scripts": {
     "tunnel": "ssh -L 3307:127.0.0.1:3306 mouse@s3.small.pl",

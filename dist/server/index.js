@@ -100,10 +100,24 @@ async function testDB() {
     }
 }
 testDB();
-// only for development
+// only for development - TEST FOR DEVELOPMENT - REMOVE AFTER
 if (process.env.NODE_ENV === 'development') {
-    // TEST ENDPOINTS - DEBUG - REMOVE AFTER
     app.use('/api', testsRouter);
+    testQueries();
+}
+async function testQueries() {
+    try {
+        const [rows] = await db.query('SELECT * FROM projects');
+        const [rows2] = await db.query('SELECT * FROM tasks');
+        const [rows3] = await db.query('SELECT * FROM subtasks');
+        const [rows4] = await db.query('SELECT * FROM user_projects');
+        const [rows5] = await db.query('SELECT * FROM columns');
+        console.log(rows[0], rows2[0], rows3[0], rows4[0], rows5[0]);
+    }
+    catch (e) {
+        console.log(e);
+        throw new Error(`[MySQL] Fatal Error`);
+    }
 }
 // Routes
 app.use('/api', authRouter);

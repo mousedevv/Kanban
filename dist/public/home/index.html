@@ -5,9 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kanban - Home page</title>
+
     <link rel="stylesheet" href="../assets/global-css/fonts.css">
     <link rel="stylesheet" href="../assets/global-css/default.css">
+
     <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css">
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6.3.7/animations/shift-away.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+
     <script type="module" src="./src/home.js"></script>
 </head>
 
@@ -19,16 +29,31 @@
 
     <div class="sidebar flexColNotCenter">
         <h2>Your projects</h2>
+
+        <div class="colSeparator"></div>
+
         <div class="projectBtnWrapper">
-            <button class="btn">Project 1</button>
-            <button class="btn">Project 2</button>
+
         </div>
     </div>
 
-    <div class="colsWrapper">
-        <div class="col">
+    <div class="projectsWrapper">
+        <div class="projectContent home">
+            <h1>Hello!</h1>
+            <h2>Choose a project or...</h2>
+            <h2>...create a new one to get started!</h2>
+        </div>
+        <!-- <div class="col">
             <div class="titleRow">
-                <div class="colTitle" contenteditable="">Column 1 title</div>
+                <div class="colTitle" contenteditable>Column 1 title</div>
+                <button class="btn colSettingsBtn flex" id="col1settings">☰</button>
+            </div>
+            <div class="colSeparator"></div>
+            <div class="task" id="task1">
+                <div class="taskTitleRow">
+                    <div class="taskTitle" contenteditable>Task 1 title</div>
+                    <input type="checkbox" class="flex taskCheckbox" id="col1settings"></input>
+                </div>
             </div>
         </div>
 
@@ -42,9 +67,8 @@
             <div class="titleRow">
                 <div class="colTitle" contenteditable="">Column 3 title</div>
             </div>
-        </div>
+        </div> -->
     </div>
-
 </body>
 
 </html>

@@ -17,24 +17,25 @@ nav {
     position: fixed;
     top: 0;
     left: 0;
-    padding: 5px 5px 5px 15px;
-    width: 100vw;
+    right: 0;
+    width: 100%;
     height: var(--nav-height);
-    display: flex;
-    align-items: center;
     background-color: var(--accent-color);
+    box-sizing: border-box;
 }
 
 .menuBtn {
     position: fixed;
-    top: 4px;
     left: 15px;
+    top: 0;
+    height: var(--nav-height);
     display: none;
     color: white;
     font-size: 35px;
     cursor: pointer;
-    margin-right: 15px;
 }
+
+
 
 
 
@@ -54,48 +55,167 @@ nav {
     transition: transform 0.3s;
 }
 
+.sidebar h2 {
+    margin: 0;
+}
+
 .projectBtnWrapper {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    align-items: center;
-    margin-bottom: 20px;
-    width: 100%;
-    margin: 0;
 }
 
+.openProjectBtn,
+.openHomeBtn {
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.openHomeBtn {
+    background-color: var(--kanban-text);
+}   
+
+.openHomeBtn img {
+    width: 25px;
+    height: 25px;
+    transform: scale(2.2);
+}
 
 
 
 
 
 /* MAIN SCREEN (COLUMNS) */
-.colsWrapper {
+.projectsWrapper {
     display: flex;
     flex: 1;
-    padding: 20px;
     margin-left: 300px;
-    background-color: red;
+    width: fit-content;
+    background-color: rgb(0, 183, 255);
     margin-top: var(--nav-height);
     flex-wrap: nowrap;
 }
 
+.projectContent {
+    display: flex;
+    background-color: blueviolet;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 20px;
+}
+
+.home {
+    display: flex;
+    flex-direction: column;
+    background-color: transparent;
+    color: var(--text);
+    text-align: center;
+}
+
+.home h1 {
+    font-size: 3.5rem;
+}
+
 .col {
     position: relative;
-    display: inline-block;
     background-color: green;
     padding: 15px;
     background-color: var(--secondary-color);
     color: white;
     border-radius: 5px;
+    min-width: 200px;
     width: 200px;
     margin-right: 20px;
+    height: fit-content;
 }
 
-.colTitle {
-    font-size: 15px;
-    margin-bottom: 10px;
+.colSeparator {
+    height: 1px;
+    width: 100%;
+    margin: 10px 0;
+    background-color: var(--not-important-text);
 }
+
+.titleRow,
+.taskTitleRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.colTitle,
+.taskTitle {
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 25px;
+    margin: 0;
+    max-width: 75%;
+}
+
+.colSettingsBtn {
+    cursor: pointer;
+    background-color: var(--accent-color);
+    border-radius: 5px;
+    width: 20px;
+    height: 30px;
+    font-size: 15px;
+}
+
+.colMenuOption {
+    cursor: pointer;
+    padding: 2px;
+}
+
+
+.task {
+    background-color: rgb(26, 202, 202);
+    color: black;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+
+.taskCheckbox {
+    width: 25px;
+    height: 25px;
+}
+
+.taskDoneSubtasks {
+    background-color: var(--secondary-color-partially-transparent);
+    padding: 5px;
+    width: fit-content;
+    border-radius: 5px;
+    color: var(--not-important-text);
+    font-size: 11px;
+    margin: 0;
+}
+
+.taskDoneSubtasksAllDoneText {
+    color: #00ff00;
+}
+
+.taskDoneSubtasksNotAllDoneText {
+    color: #fa2929;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .menu {
     position: absolute;
@@ -111,9 +231,6 @@ nav {
 .menu.active {
     display: block;
 }
-
-
-
 
 /* MOBILE RESPONSIVENESS */
 @media (max-width: 768px) {
@@ -136,11 +253,23 @@ nav {
         transform: translateX(0);
     }
 
-    .colsWrapper {
+    .projectContent,
+    .projectsWrapper {
         margin-left: 0;
     }
 
     .menuBtn {
         display: block;
     }
+}
+
+.appName {
+    position: fixed;
+    left: 50%;
+    top: 0;
+    height: var(--nav-height);
+    transform: translateX(-50%);
+    margin: 0;
+    display: flex;
+    align-items: center;
 }

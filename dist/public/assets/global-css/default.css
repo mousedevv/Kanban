@@ -1,13 +1,23 @@
 :root {
     --background-color: #11151C;
     --secondary-color: #121a20;
+    --secondary-color-partially-transparent: #121a2060;
     --accent-color: #4464AD;
     --text: #FFFFFF;
     --kanban-text: #c6c90f;
     --kanban-not-important-text: #bfce3d;
     --shadow-color: rgba(198, 201, 15, 0.3);
     --not-important-text: #464646;
-    --nav-height: 45px;
+    --nav-height: 60px;
+}
+
+/* Ensure SweetAlert2 notifications appear on top of the site */
+.swal2-container {
+    z-index: 99999 !important;
+}
+
+.swal2-toast {
+    z-index: 99999 !important;
 }
 
 .flex, .flexCol {
