@@ -107,6 +107,29 @@ export const projectService = {
             );
             projectContent.id = project.UUID;
 
+            const projectHeader = document.createElement('div');
+            projectHeader.classList.add(
+                'projectHeader', 
+            );
+
+            const projectName = document.createElement('h2');
+            projectName.textContent = project.name;
+            projectHeader.appendChild(projectName);
+
+            const addTaskBtn = document.createElement('button');
+            addTaskBtn.classList.add('addTaskBtn');
+            addTaskBtn.textContent = 'Add task';
+            addTaskBtn.addEventListener('click', () => {
+                // DEBUG
+                console.log("[PLACEHOLDER] Add task to project: " + project.name);
+            });
+            projectHeader.appendChild(addTaskBtn);
+
+            projectContent.appendChild(projectHeader);
+
+            const colsWrapper = document.createElement('div');
+            colsWrapper.classList.add('colsWrapper');
+
             project.columns.forEach((column: Column) => {
                 const col = columnService.createDOMElement(column);
 
@@ -115,13 +138,12 @@ export const projectService = {
                     col.appendChild(taskEl);
                 });
 
-                projectContent.appendChild(col);
+                colsWrapper.appendChild(col);
             });
 
+            projectContent.appendChild(colsWrapper);
+
             dom.projectsWrapper.appendChild(projectContent);
-        })
-
-
-
+        });
     }
 };

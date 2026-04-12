@@ -119,7 +119,7 @@ async function testQueries() {
         throw new Error(`[MySQL] Fatal Error`);
     }
 }
-// Routes
+// API Routes
 app.use('/api', authRouter);
 app.use('/api', projectRouter);
 app.use('/api', testsRouter);

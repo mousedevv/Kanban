@@ -8,9 +8,6 @@ body {
     width: 100%;
 }
 
-
-
-
 /* NAV & menuBtn (mobile only) */
 nav {
     z-index: 2000;
@@ -36,10 +33,6 @@ nav {
 }
 
 
-
-
-
-
 /* SIDEBAR */
 .sidebar {
     z-index: 1500;
@@ -48,7 +41,6 @@ nav {
     left: 0;
     width: var(--sidebar-width);
     height: calc(100vh - var(--nav-height));
-    /* overflow-y: auto; */
     background: var(--secondary-color);
     color: white;
     padding: var(--sidebar-padding);
@@ -76,7 +68,7 @@ nav {
 
 .openHomeBtn {
     background-color: var(--kanban-text);
-}   
+}
 
 .openHomeBtn img {
     width: 25px;
@@ -84,35 +76,53 @@ nav {
     transform: scale(2.2);
 }
 
-
-
-
-
 /* MAIN SCREEN (COLUMNS) */
 .projectsWrapper {
-    display: flex;
-    position: absolute;
+    position: fixed;
     top: var(--nav-height);
     left: calc(var(--sidebar-width) + var(--sidebar-padding));
-    /* DEBUG */
-    background-color: rgb(0, 183, 255);
     width: calc(100% - var(--sidebar-width) - var(--sidebar-padding));
-    flex-wrap: nowrap;
+    height: calc(100vh - var(--nav-height));
     box-sizing: border-box;
-    overflow-y: hidden;
+    overflow-y: auto;
+}
+
+.projectHeader {
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background-color: inherit;
+    margin-bottom: 15px;
+}
+
+.projectHeader h2 {
+    margin-right: 20px;
+}
+
+.projectHeader button {
+    all: unset;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: var(--accent-color);
+    color: white;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 15px;
+    width: 120px;
+
 }
 
 .projectContent {
     display: flex;
-    /* DEBUG */
-    /* background-color: blueviolet; */
+    flex-direction: column;
     width: fit-content;
-    padding: 40px;
-}
-
-.projectsWrapper {
-    /* 100vh - nav - wrapper padding */
-    min-height: calc(100vh - var(--nav-height) - 20px);
+    padding: 10px 40px 40px 40px;
 }
 
 .home {
@@ -125,27 +135,27 @@ nav {
     width: min(900px, 100%);
     margin: 0 auto;
     padding: 20px;
-    /* DEBUG */
-    /* background-color: #00ff00; */
     box-sizing: border-box;
-    margin-top: -175px;
 }
 
 .home h1 {
     font-size: 3.5rem;
 }
 
+.colsWrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
 .col {
     position: relative;
-    /* DEBUG */
-    /* background-color: green; */
     padding: 15px;
     background-color: var(--secondary-color);
     color: white;
     border-radius: 5px;
     min-width: 200px;
     width: 200px;
-    margin-right: 20px;
     height: fit-content;
 }
 
@@ -186,9 +196,8 @@ nav {
     padding: 2px;
 }
 
-
 .task {
-    background-color: rgb(26, 202, 202);
+    background-color: rgb(255, 255, 255);
     color: black;
     padding: 10px;
     margin: 5px 0;
@@ -218,21 +227,6 @@ nav {
     color: #fa2929;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .menu {
     position: absolute;
     top: 0;
@@ -248,6 +242,17 @@ nav {
     display: block;
 }
 
+.appName {
+    position: fixed;
+    left: 50%;
+    top: 0;
+    height: var(--nav-height);
+    transform: translateX(-50%);
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
 /* MOBILE RESPONSIVENESS */
 @media (max-width: 768px) {
     body {
@@ -260,7 +265,6 @@ nav {
         left: 0;
         width: 250px;
         transform: translateX(-100%);
-        transition: 0.3s;
         z-index: 1000;
     }
 
@@ -268,21 +272,22 @@ nav {
         transform: translateX(0);
     }
 
-    .projectsWrapper,
-    .projectContent {
+    .projectsWrapper {
         position: relative;
         left: 0;
-        right: 0;
-        margin-left: 0;
-    }
-
-    .projectsWrapper {
-        height: calc(100vh - var(--nav-height));
         width: 100%;
+        min-height: calc(100vh - var(--nav-height));
     }
 
     .projectContent {
-        height: 100%;
+        width: 100%;
+        padding: 20px;
+    }
+
+    .projectHeader {
+        position: sticky;
+        top: 0;
+        left: 0;
     }
 
     .home {
@@ -295,15 +300,4 @@ nav {
     .menuBtn {
         display: block;
     }
-}
-
-.appName {
-    position: fixed;
-    left: 50%;
-    top: 0;
-    height: var(--nav-height);
-    transform: translateX(-50%);
-    margin: 0;
-    display: flex;
-    align-items: center;
 }

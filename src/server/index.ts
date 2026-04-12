@@ -150,7 +150,7 @@ async function testQueries() {
 }
 
 
-// Routes
+// API Routes
 app.use('/api', authRouter);
 app.use('/api', projectRouter);
 app.use('/api', testsRouter);
