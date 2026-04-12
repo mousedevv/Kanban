@@ -5,7 +5,8 @@ import { notification } from "../../../utils/notification.js";
 import { $, $$ } from "../dom/selectors.js";
 const dom = {
     projectBtnWrapper: $(".projectBtnWrapper"),
-    projectsWrapper: $(".projectsWrapper")
+    projectsWrapper: $(".projectsWrapper"),
+    homeTab: $(".home"),
 };
 export const projectService = {
     async getProjects() {
@@ -58,7 +59,7 @@ export const projectService = {
             projectContent.classList.add('hidden');
         });
         // Show home tab only
-        projects[0].classList.remove('hidden');
+        dom.homeTab.classList.remove('hidden');
     },
     changeOpenedProject(project) {
         const projects = $$(".projectContent");
@@ -70,6 +71,7 @@ export const projectService = {
                 projectContent.classList.add('hidden');
             }
         });
+        dom.homeTab.classList.add('hidden');
     },
     createDOMProjects(projects) {
         projects.forEach(project => {

@@ -13,7 +13,8 @@ import { $, $$ } from "../dom/selectors.js";
 
 const dom = {
     projectBtnWrapper: $(".projectBtnWrapper")! as HTMLDivElement,
-    projectsWrapper: $(".projectsWrapper")! as HTMLDivElement
+    projectsWrapper: $(".projectsWrapper")! as HTMLDivElement,
+    homeTab: $(".home")! as HTMLDivElement,
 }
 
 export const projectService = {
@@ -81,7 +82,7 @@ export const projectService = {
         });
 
         // Show home tab only
-        projects[0].classList.remove('hidden');
+        dom.homeTab.classList.remove('hidden');
     },
 
     changeOpenedProject(project: Project) {
@@ -93,7 +94,8 @@ export const projectService = {
             else {
                 projectContent.classList.add('hidden');
             }
-        })
+        });
+        dom.homeTab.classList.add('hidden');
     },
 
     createDOMProjects(projects: Project[]) {

@@ -9,6 +9,8 @@
     --shadow-color: rgba(198, 201, 15, 0.3);
     --not-important-text: #464646;
     --nav-height: 60px;
+    --sidebar-width: 250px;
+    --sidebar-padding: 20px;
 }
 
 /* Ensure SweetAlert2 notifications appear on top of the site */
