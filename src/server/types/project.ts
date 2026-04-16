@@ -1,11 +1,19 @@
-export class Project {
-    name: string;
-    description: string;
-    UUID: string;
+import { Column } from "./column.js";
 
-    constructor(name: string, description: string, UUID: string) {
+export class Project {
+    constructor (
+        public id: number,
+        public UUID: string,
+        public name: string,
+        public description: string,
+        public created_at: string,
+        public columns: Column[]
+    ) {
+        this.id = id;
+        this.UUID = UUID;
         this.name = name;
         this.description = description;
-        this.UUID = UUID
+        this.created_at = created_at;
+        this.columns = columns;
     }
 }

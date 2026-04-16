@@ -23,3 +23,4 @@ export function notification(title, type, text) {
         text: text
     });
 }
+//# sourceMappingURL=notification.js.map

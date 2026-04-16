@@ -10,6 +10,7 @@ import fs from "fs";
 import { hashPassword } from "./src/auth/hash.js";
 import { register } from "./src/utils/register.js";
 import { authorize } from "./src/auth/authorization.js";
+import { getColumns } from "./src/db/getters.js";
 // Routers
 import authRouter from "./src/routes/auth.js";
 import projectRouter from "./src/routes/project.js";
@@ -38,6 +39,7 @@ const SKIPPED_PATHS_WHEN_LOGGED_IN = [
 ];
 const URL = process.env.URL;
 const PORT = process.env.PORT;
+let testProject = {};
 export const app = express();
 // Fix proxy connections
 app.set("trust proxy", 1);
@@ -105,6 +107,7 @@ if (process.env.NODE_ENV === 'development') {
     app.use('/api', testsRouter);
     testQueries();
 }
+// DEBUG DEV REMOVE AFTER
 async function testQueries() {
     try {
         const [rows] = await db.query('SELECT * FROM projects');
@@ -112,7 +115,9 @@ async function testQueries() {
         const [rows3] = await db.query('SELECT * FROM subtasks');
         const [rows4] = await db.query('SELECT * FROM user_projects');
         const [rows5] = await db.query('SELECT * FROM columns');
-        console.log(rows[0], rows2[0], rows3[0], rows4[0], rows5[0]);
+        const [rows6] = await db.query('SELECT * FROM users');
+        // console.log(rows, rows2, rows3, rows4, rows5, rows6);
+        console.log(await getColumns(rows[0]));
     }
     catch (e) {
         console.log(e);
@@ -126,7 +131,7 @@ app.use('/api', testsRouter);
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-// Expose commonly used variables to console for debugging #DEBUG #DEV #REMOVEAFTER
+// Expose commonly used variables to console for debugging #DEBUG #DEV #REMOVE AFTER
 globalThis.register = register;
 globalThis.__dirname = __dirname;
 globalThis.path = path;
@@ -134,3 +139,4 @@ globalThis.fs = fs;
 globalThis.hashPassword = hashPassword;
 globalThis.authorize = authorize;
 globalThis.db = db;
+//# sourceMappingURL=index.js.map

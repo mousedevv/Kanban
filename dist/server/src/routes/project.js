@@ -9,21 +9,23 @@ router.post('/create-project', async (req, res) => {
     const project = await DBProjectsService.createProject(name, description, req.session.user);
     return res.json({ project: project });
 });
-router.get(`/project/:UUID`, async (req, res) => {
-    const UUID = req.params.UUID;
+router.get(`/get-all-projects`, async (req, res) => {
     try {
-        const project = await DBProjectsService.getProject(req.session.user, UUID);
-        return res.json({ project });
+        const projects = await DBProjectsService.getUserProjectsFormatted(req.session.user);
+        return res.json(projects);
     }
     catch (e) {
+        // DEBUG
+        console.log(req.session.user);
         switch (e.message) {
-            case "Project not found":
-                return res.sendStatus(404);
-            case "Forbidden":
+            case "User not found":
                 return res.sendStatus(403);
+            case "No projects found":
+                return res.sendStatus(404);
             default:
                 return res.sendStatus(500);
         }
     }
 });
 export default router;
+//# sourceMappingURL=project.js.map

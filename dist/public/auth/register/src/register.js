@@ -74,3 +74,4 @@ dom.form.addEventListener("submit", async (e) => {
     saveUserToLocalStorage(data.username, data.UUID);
     window.location.href = "/home";
 });
+//# sourceMappingURL=register.js.map

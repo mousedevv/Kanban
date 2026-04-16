@@ -20,7 +20,7 @@ const dom = {
 export const projectService = {
     async getProjects() {
         try {
-            const res = await fetch(window.location.origin + "/api/projects", {
+            const res = await fetch(window.location.origin + "/api/get-all-projects", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -36,9 +36,8 @@ export const projectService = {
         }
     },
 
-    async initProjects(projects: Project[]) {
-        // Disabled for DEBUG
-        // const projects: Project[] = await this.getProjects();
+    async initProjects() {
+        const projects: Project[] = await this.getProjects();
 
         this.createProjectBtns(projects);
         this.createDOMProjects(projects);

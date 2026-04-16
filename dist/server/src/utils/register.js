@@ -20,3 +20,4 @@ export async function register(username, password) {
     user.id = dbUserId;
     return user;
 }
+//# sourceMappingURL=register.js.map

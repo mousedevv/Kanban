@@ -55,3 +55,4 @@ export const columnService = {
         });
     },
 };
+//# sourceMappingURL=columnService.js.map

@@ -7,3 +7,4 @@ export async function authorize(username, password) {
     if (authorized)
         return user;
 }
+//# sourceMappingURL=authorization.js.map

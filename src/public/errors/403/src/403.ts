@@ -1,7 +1,7 @@
 const TIME_TO_REDIRECT = 5; // in seconds
 const HOME_PAGE_URL = "../../home";
 
-import { Dom } from "../../types/types";
+import { Dom } from "../../types/types.js";
 
 const dom: Dom = {
     timeToRedirect: document.querySelector(".timeToRedirect") as HTMLSpanElement,

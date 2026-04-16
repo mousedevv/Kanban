@@ -49,3 +49,4 @@ router.get('/logout', (req, res) => {
     return res.json("session destroyed");
 });
 export default router;
+//# sourceMappingURL=auth.js.map

@@ -13,3 +13,4 @@ const interval = setInterval(() => {
     }
 }, 1000);
 export {};
+//# sourceMappingURL=404.js.map

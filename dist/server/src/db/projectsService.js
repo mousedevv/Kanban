@@ -1,5 +1,6 @@
 import { db } from "../../index.js";
 import { Project } from "../../types/project.js";
+import { getColumns } from "./getters.js";
 export const DBProjectsService = {
     async generateUUID() {
         while (true) {
@@ -9,27 +10,56 @@ export const DBProjectsService = {
                 return UUID;
         }
     },
-    async authorizeProjectAccess(user, projectUUID) {
-        const [rows] = await db.execute(`SELECT * FROM user_projects WHERE user_id = ? AND project_id = ?`, [user.id, projectUUID]);
-        if (rows[0].length > 0)
-            return rows[0].role;
-        else
-            throw new Error("Forbidden");
-    },
+    // DEPRECATED
+    // async authorizeProjectAccess(user: User, projectUUID: string) {
+    //     const [rows] = await db.execute<userRow[]>(
+    //         `SELECT * FROM user_projects WHERE user_id = ? AND project_id = ?`, [user.id, projectUUID]
+    //     );
+    //     if (rows[0].length > 0) return rows[0].role;
+    //     else throw new Error("Forbidden");
+    // },
     async createProject(name, description, user) {
         const UUID = await this.generateUUID();
         const [rows1] = await db.execute('INSERT INTO projects (`UUID`, `name`, `description`) VALUES (?, ?, ?)', [UUID, name, description]);
-        // Extract project AUTO_INCREMENT id to insert into user_projects
-        const projectId = rows1.insertId;
-        const [rows2] = await db.execute('INSERT INTO user_projects (`project_id`, `role`, `user_id`) VALUES (?, ?, ?)', [projectId, "owner", user.id]);
-        return new Project(name, description, UUID);
+        const [projectRow] = await db.execute('SELECT * FROM projects WHERE UUID = ?', [UUID]);
+        const id = projectRow[0].id;
+        const created_at = projectRow[0].created_at;
+        const columns = [];
+        const [rows2] = await db.execute('INSERT INTO user_projects (`project_id`, `role`, `user_id`) VALUES (?, ?, ?)', [id, "owner", user.id]);
+        return new Project(id, UUID, name, description, created_at, columns);
     },
-    async getProject(user, UUID) {
-        const role = await this.authorizeProjectAccess(user, UUID);
-        const [rows] = await db.execute(`SELECT * FROM projects WHERE UUID = ?`, [UUID]);
-        if (!rows[0] || rows[0].length === 0) {
-            throw new Error("Project not found");
+    // DEPRECATED
+    // async getProject(user: User, UUID: string) {
+    //     const role = await this.authorizeProjectAccess(user, UUID);
+    //     const [rows] = await db.execute<projectRow[]>(`SELECT * FROM projects WHERE UUID = ?`, [UUID]);
+    //     if (!rows[0] || rows[0].length === 0) {
+    //         throw new Error("Project not found");
+    //     }
+    //     return rows[0];
+    // },
+    async getUserProjectsFormatted(user) {
+        const [rows1] = await db.execute(`SELECT * FROM users WHERE UUID = ?`, [user.UUID]);
+        const [rows2] = await db.execute(`SELECT * FROM user_projects WHERE user_id = ?`, [user.id]);
+        if (!rows1[0] || rows1[0].length === 0) {
+            throw new Error("User not found");
         }
-        return rows[0];
-    }
+        else if (!rows2 || rows2.length === 0) {
+            throw new Error("No projects found");
+        }
+        const projectIds = rows2.map((row) => row.project_id);
+        // Generate safe SQL placeholder instead of putting projectIds directly
+        // Example: [1, 24, 366] -> "?, ?, ?"
+        const queryIdsPlaceholder = projectIds.map(() => "?").join(",");
+        const [rows3] = await db.execute(`SELECT * FROM projects WHERE id IN (${queryIdsPlaceholder})`, projectIds);
+        const formattedProjects = [];
+        for (const row of rows3) {
+            const project = new Project(row.id, row.UUID, row.name, row.description, row.created_at, []);
+            project.columns = await getColumns(project);
+            formattedProjects.push(project);
+        }
+        // Get projects user roles
+        const roles = rows2.map((row) => row.role);
+        return [formattedProjects, roles];
+    },
 };
+//# sourceMappingURL=projectsService.js.map

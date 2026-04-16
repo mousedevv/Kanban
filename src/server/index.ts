@@ -14,6 +14,8 @@ import { hashPassword } from "./src/auth/hash.js";
 import { register } from "./src/utils/register.js";
 import { authorize } from "./src/auth/authorization.js";
 
+import { getColumns } from "./src/db/getters.js";
+
 // Routers
 import authRouter from "./src/routes/auth.js";
 import projectRouter from "./src/routes/project.js";
@@ -47,6 +49,9 @@ const SKIPPED_PATHS_WHEN_LOGGED_IN = [
 
 const URL = process.env.URL;
 const PORT = process.env.PORT;
+
+let testProject = {};
+
 
 export const app = express();
 
@@ -135,6 +140,7 @@ if (process.env.NODE_ENV === 'development') {
     testQueries();
 }
 
+// DEBUG DEV REMOVE AFTER
 async function testQueries() {
     try {
         const [rows] = await db.query('SELECT * FROM projects') as any;
@@ -142,7 +148,11 @@ async function testQueries() {
         const [rows3] = await db.query('SELECT * FROM subtasks') as any;
         const [rows4] = await db.query('SELECT * FROM user_projects') as any;
         const [rows5] = await db.query('SELECT * FROM columns') as any;
-        console.log(rows[0], rows2[0], rows3[0], rows4[0], rows5[0]);
+        const [rows6] = await db.query('SELECT * FROM users') as any;
+        // console.log(rows, rows2, rows3, rows4, rows5, rows6);
+
+        console.log(await getColumns(rows[0]));
+
     } catch (e: Error | any) {
         console.log(e);
         throw new Error(`[MySQL] Fatal Error`);
@@ -159,7 +169,7 @@ app.listen(PORT, (): void => {
     console.log(`Server running on port ${PORT}`);
 });
 
-// Expose commonly used variables to console for debugging #DEBUG #DEV #REMOVEAFTER
+// Expose commonly used variables to console for debugging #DEBUG #DEV #REMOVE AFTER
 (globalThis as any).register = register;
 (globalThis as any).__dirname = __dirname;
 (globalThis as any).path = path;

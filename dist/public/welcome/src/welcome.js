@@ -1,4 +1,3 @@
-"use strict";
 const loginBtn = document.querySelector(".loginBtn");
 const registerBtn = document.querySelector(".registerBtn");
 if (document.cookie) {
@@ -10,3 +9,5 @@ loginBtn.addEventListener("click", () => {
 registerBtn.addEventListener("click", () => {
     window.location.href = "../auth/register";
 });
+export {};
+//# sourceMappingURL=welcome.js.map

@@ -1,4 +1,4 @@
-import { CookiesOptions } from "./types";
+import { CookiesOptions } from "./types.js";
 
 export function setCookie(name: string, value: string, days: number): void {
     if (!name || !value) return;
