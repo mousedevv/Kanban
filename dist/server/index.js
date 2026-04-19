@@ -104,8 +104,27 @@ async function testDB() {
 testDB();
 // only for development - TEST FOR DEVELOPMENT - REMOVE AFTER
 if (process.env.NODE_ENV === 'development') {
+    console.log('[SERVER] Adding test routes directly');
+    app.get('/api/create-test-session', (req, res) => {
+        console.log('[TEST] Create test session route called directly');
+        console.log('[TEST] Session ID before:', req.session.id);
+        req.session.user = {
+            id: 99999999,
+            username: 'test',
+            UUID: 'testUUID',
+            passwordHash: 'testHash'
+        };
+        console.log('[TEST] Session ID after setting user:', req.session.id);
+        req.session.save((err) => {
+            if (err) {
+                console.error('[TEST] Session save error:', err);
+                return res.status(500).send('Session save failed');
+            }
+            console.log('[TEST] Session saved successfully, ID:', req.session.id);
+            res.send('session set directly');
+        });
+    });
     app.use('/api', testsRouter);
-    testQueries();
 }
 // DEBUG DEV REMOVE AFTER
 async function testQueries() {

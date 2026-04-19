@@ -1,7 +1,7 @@
 import { userRow, projectRow, userProjectsRow } from "../../types/types.js";
 import { ResultSetHeader } from "mysql2";
 import { db } from "../../index.js";
-import { Project} from "../../types/project.js";
+import { Project } from "../../types/project.js";
 import { Column } from "../../types/column.js";
 import { User } from "../../types/user.js";
 
@@ -29,7 +29,7 @@ export const DBProjectsService = {
     //     else throw new Error("Forbidden");
     // },
 
-    async createProject(name: string, description: string, user: User) {
+    async createProject(name: string, description: string, user: User): Promise<Project> {
         const UUID = await this.generateUUID();
 
         const [rows1] = await db.execute<ResultSetHeader>(
