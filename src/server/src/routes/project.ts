@@ -22,7 +22,7 @@ router.get(`/get-all-projects`, async (req, res) => {
         return res.json(projects);
     } catch (e: Error | any) {
         // DEBUG
-        console.log(req.session.user);
+        // console.log(req.session.user);
         switch (e.message) {
             case "User not found":
                 return res.sendStatus(403);

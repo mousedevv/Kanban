@@ -2,6 +2,7 @@ import { Project } from "../types/project.js";
 import { Column } from "../types/column.js";
 import { Task } from "../types/task.js";
 import { Subtask } from "../types/subtask.js";
+import { ProjectRole, ProjectsPacket } from "../types/types.js";
 
 import { columnService } from "./columnService.js";
 import { taskService } from "./taskService.js";
@@ -31,19 +32,21 @@ export const projectService = {
             return data;
         }
         catch (e) {
-            notification("Something went wrong - try again later!", "error");
+            // DEBUG - disable notification for development
+            // notification("Something went wrong - try again later!", "error");
             throw new Error("Something went wrong - try again later!");
         }
     },
 
     async initProjects() {
-        const projects: Project[] = await this.getProjects();
+        const [ projects, roles ] = await this.getProjects();
+        console.log(projects, roles);
 
-        this.createProjectBtns(projects);
-        this.createDOMProjects(projects);
+        this.createProjectBtns(projects, roles);
+        this.createDOMProjects(projects, roles);
     },
 
-    createProjectBtns(projects: Project[]) {
+    createProjectBtns(projects: Project[], roles: ProjectRole[]) {
         const btn = document.createElement('button');
 
         btn.classList.add('btn', "openHomeBtn");
@@ -73,31 +76,7 @@ export const projectService = {
         });
     },
 
-    openHomeTab() {
-        // Select all project wrappers
-        const projects = $$(".projectContent");
-        projects.forEach(projectContent => {
-            projectContent.classList.add('hidden');
-        });
-
-        // Show home tab only
-        dom.homeTab.classList.remove('hidden');
-    },
-
-    changeOpenedProject(project: Project) {
-        const projects = $$(".projectContent");
-        projects.forEach(projectContent => {
-            if (projectContent.id === project.UUID) {
-                projectContent.classList.remove('hidden');
-            }
-            else {
-                projectContent.classList.add('hidden');
-            }
-        });
-        dom.homeTab.classList.add('hidden');
-    },
-
-    createDOMProjects(projects: Project[]) {
+    createDOMProjects(projects: Project[], roles: ProjectRole[]) {
         projects.forEach(project => {
             const projectContent = document.createElement('div');
             projectContent.classList.add(
@@ -144,5 +123,29 @@ export const projectService = {
 
             dom.projectsWrapper.appendChild(projectContent);
         });
-    }
+    },
+
+    openHomeTab() {
+        // Select all project wrappers
+        const projects = $$(".projectContent");
+        projects.forEach(projectContent => {
+            projectContent.classList.add('hidden');
+        });
+
+        // Show home tab only
+        dom.homeTab.classList.remove('hidden');
+    },
+
+    changeOpenedProject(project: Project) {
+        const projects = $$(".projectContent");
+        projects.forEach(projectContent => {
+            if (projectContent.id === project.UUID) {
+                projectContent.classList.remove('hidden');
+            }
+            else {
+                projectContent.classList.add('hidden');
+            }
+        });
+        dom.homeTab.classList.add('hidden');
+    },
 };

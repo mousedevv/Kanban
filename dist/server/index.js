@@ -6,11 +6,12 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import path from "path";
 import fs from "fs";
+// Tests
+import { testDB } from "./src/db/test.js";
 // Authorization utils
 import { hashPassword } from "./src/auth/hash.js";
 import { register } from "./src/utils/register.js";
 import { authorize } from "./src/auth/authorization.js";
-import { getColumns } from "./src/db/getters.js";
 // Routers
 import authRouter from "./src/routes/auth.js";
 import projectRouter from "./src/routes/project.js";
@@ -91,40 +92,11 @@ export const db = mysql2.createPool({
     waitForConnections: true,
     connectionLimit: 10
 });
-async function testDB() {
-    try {
-        await db.query('SELECT 1 AS test');
-        console.log('[MySQL] Connected to DB successfully.');
-    }
-    catch (e) {
-        console.log(e);
-        throw new Error(`[MySQL] Fatal Error`);
-    }
-}
-testDB();
+await testDB();
 // only for development - TEST FOR DEVELOPMENT - REMOVE AFTER
 if (process.env.NODE_ENV === 'development') {
-    console.log('[SERVER] Adding test routes directly');
-    app.get('/api/create-test-session', (req, res) => {
-        console.log('[TEST] Create test session route called directly');
-        console.log('[TEST] Session ID before:', req.session.id);
-        req.session.user = {
-            id: 99999999,
-            username: 'test',
-            UUID: 'testUUID',
-            passwordHash: 'testHash'
-        };
-        console.log('[TEST] Session ID after setting user:', req.session.id);
-        req.session.save((err) => {
-            if (err) {
-                console.error('[TEST] Session save error:', err);
-                return res.status(500).send('Session save failed');
-            }
-            console.log('[TEST] Session saved successfully, ID:', req.session.id);
-            res.send('session set directly');
-        });
-    });
     app.use('/api', testsRouter);
+    testQueries();
 }
 // DEBUG DEV REMOVE AFTER
 async function testQueries() {
@@ -136,7 +108,8 @@ async function testQueries() {
         const [rows5] = await db.query('SELECT * FROM columns');
         const [rows6] = await db.query('SELECT * FROM users');
         // console.log(rows, rows2, rows3, rows4, rows5, rows6);
-        console.log(await getColumns(rows[0]));
+        // DEBUG - TEST getColumns function
+        // console.log(await getColumns(rows[0]));
     }
     catch (e) {
         console.log(e);

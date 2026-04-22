@@ -1,7 +1,5 @@
 import { columnService } from "./columnService.js";
 import { taskService } from "./taskService.js";
-// import { subtaskService } from "./subtaskService.js";
-import { notification } from "../../../utils/notification.js";
 import { $, $$ } from "../dom/selectors.js";
 const dom = {
     projectBtnWrapper: $(".projectBtnWrapper"),
@@ -21,16 +19,18 @@ export const projectService = {
             return data;
         }
         catch (e) {
-            notification("Something went wrong - try again later!", "error");
+            // DEBUG - disable notification for development
+            // notification("Something went wrong - try again later!", "error");
             throw new Error("Something went wrong - try again later!");
         }
     },
     async initProjects() {
-        const projects = await this.getProjects();
-        this.createProjectBtns(projects);
-        this.createDOMProjects(projects);
+        const [projects, roles] = await this.getProjects();
+        console.log(projects, roles);
+        this.createProjectBtns(projects, roles);
+        this.createDOMProjects(projects, roles);
     },
-    createProjectBtns(projects) {
+    createProjectBtns(projects, roles) {
         const btn = document.createElement('button');
         btn.classList.add('btn', "openHomeBtn");
         btn.addEventListener('click', () => {
@@ -51,28 +51,7 @@ export const projectService = {
             dom.projectBtnWrapper.appendChild(btn);
         });
     },
-    openHomeTab() {
-        // Select all project wrappers
-        const projects = $$(".projectContent");
-        projects.forEach(projectContent => {
-            projectContent.classList.add('hidden');
-        });
-        // Show home tab only
-        dom.homeTab.classList.remove('hidden');
-    },
-    changeOpenedProject(project) {
-        const projects = $$(".projectContent");
-        projects.forEach(projectContent => {
-            if (projectContent.id === project.UUID) {
-                projectContent.classList.remove('hidden');
-            }
-            else {
-                projectContent.classList.add('hidden');
-            }
-        });
-        dom.homeTab.classList.add('hidden');
-    },
-    createDOMProjects(projects) {
+    createDOMProjects(projects, roles) {
         projects.forEach(project => {
             const projectContent = document.createElement('div');
             projectContent.classList.add('projectContent', 'hidden');
@@ -104,6 +83,27 @@ export const projectService = {
             projectContent.appendChild(colsWrapper);
             dom.projectsWrapper.appendChild(projectContent);
         });
-    }
+    },
+    openHomeTab() {
+        // Select all project wrappers
+        const projects = $$(".projectContent");
+        projects.forEach(projectContent => {
+            projectContent.classList.add('hidden');
+        });
+        // Show home tab only
+        dom.homeTab.classList.remove('hidden');
+    },
+    changeOpenedProject(project) {
+        const projects = $$(".projectContent");
+        projects.forEach(projectContent => {
+            if (projectContent.id === project.UUID) {
+                projectContent.classList.remove('hidden');
+            }
+            else {
+                projectContent.classList.add('hidden');
+            }
+        });
+        dom.homeTab.classList.add('hidden');
+    },
 };
 //# sourceMappingURL=projectService.js.map

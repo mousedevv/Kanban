@@ -2,7 +2,6 @@ import session from 'express-session';
 import MySQLStoreFactory from 'express-mysql-session';
 const MySQLStore = MySQLStoreFactory(session);
 export function initSessionMiddleware() {
-    console.log('[SESSION] Initializing session middleware');
     const OPTIONS = {
         host: process.env.DB_HOST,
         user: process.env.DB_USER,
@@ -17,10 +16,10 @@ export function initSessionMiddleware() {
     sessionStore.on('error', (error) => {
         console.error('[SESSION] MySQL session store error:', error);
     });
-    const sessionMiddleware = session({
+    return session({
         secret: process.env.SESSION_SECRET,
         resave: false,
-        saveUninitialized: true, // Changed to true for testing
+        saveUninitialized: false,
         store: sessionStore,
         cookie: {
             httpOnly: true,
@@ -31,8 +30,6 @@ export function initSessionMiddleware() {
             maxAge: 14 * 24 * 60 * 60 * 1000
         }
     });
-    console.log('[SESSION] Session middleware created');
-    return sessionMiddleware;
 }
 // Initialize app.use(session()) middleware instantly after server starts
 export default {};

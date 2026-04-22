@@ -9,6 +9,9 @@ import { dirname } from "path";
 import path from "path";
 import fs from "fs";
 
+// Tests
+import { testDB } from "./src/db/test.js";
+
 // Authorization utils
 import { hashPassword } from "./src/auth/hash.js";
 import { register } from "./src/utils/register.js";
@@ -121,17 +124,7 @@ export const db = mysql2.createPool({
     connectionLimit: 10
 });
 
-async function testDB() {
-    try {
-        await db.query('SELECT 1 AS test');
-        console.log('[MySQL] Connected to DB successfully.');
-    } catch (e: Error | any) {
-        console.log(e);
-        throw new Error(`[MySQL] Fatal Error`);
-    }
-}
-
-testDB();
+await testDB();
 
 // only for development - TEST FOR DEVELOPMENT - REMOVE AFTER
 if (process.env.NODE_ENV === 'development') {
@@ -151,7 +144,8 @@ async function testQueries() {
         const [rows6] = await db.query('SELECT * FROM users') as any;
         // console.log(rows, rows2, rows3, rows4, rows5, rows6);
 
-        console.log(await getColumns(rows[0]));
+        // DEBUG - TEST getColumns function
+        // console.log(await getColumns(rows[0]));
 
     } catch (e: Error | any) {
         console.log(e);
