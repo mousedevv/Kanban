@@ -1,6 +1,5 @@
 import "dotenv/config";
 import express from "express";
-import cors from "cors";
 import mysql2 from "mysql2/promise";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -38,19 +37,14 @@ const SKIPPED_PATHS_WHEN_LOGGED_IN = [
     '/welcome',
     '/auth',
 ];
-const URL = process.env.URL;
+// const URL = process.env.URL;
 const PORT = process.env.PORT;
-let testProject = {};
 export const app = express();
 // Fix proxy connections
 app.set("trust proxy", 1);
 // Initialize app.use(session()) middleware instantly after server starts
 // (session middleware)
 app.use(initSessionMiddleware());
-app.use(cors({
-    origin: `${URL}:${PORT}`,
-    credentials: true
-}));
 app.use(express.json());
 // Authentication middleware
 app.use((req, res, next) => {

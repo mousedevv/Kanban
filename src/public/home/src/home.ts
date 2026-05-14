@@ -1,7 +1,7 @@
 import { Project } from "./types/project.js";
 import { Column } from "./types/column.js";
 
-import { $, $$ } from "./dom/selectors.js";
+import { $, $$ } from "../../utils/dom/selectors.js";
 
 import { columnService } from "./services/columnService.js";
 import { taskService } from "./services/taskService.js";

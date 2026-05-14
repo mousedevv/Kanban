@@ -10,7 +10,7 @@ import { taskService } from "./taskService.js";
 
 import { notification } from "../../../utils/notification.js";
 
-import { $, $$ } from "../dom/selectors.js";
+import { $, $$ } from "../../../utils/dom/selectors.js";
 
 const dom = {
     projectBtnWrapper: $(".projectBtnWrapper")! as HTMLDivElement,

@@ -1,6 +1,6 @@
 import { columnService } from "./columnService.js";
 import { taskService } from "./taskService.js";
-import { $, $$ } from "../dom/selectors.js";
+import { $, $$ } from "../../../utils/dom/selectors.js";
 const dom = {
     projectBtnWrapper: $(".projectBtnWrapper"),
     projectsWrapper: $(".projectsWrapper"),

@@ -269,6 +269,19 @@ nav {
     align-items: center;
 }
 
+/* WINDOWS (f.e. add task window) */
+
+.windowsWrapper {
+    /* Over sidebar and under nav  */
+    z-index: 1750;
+    background-color: var(--secondary-color-partially-transparent);
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    width: 100%;
+    height: calc(100vh - var(--nav-height));
+}
+
 /* MOBILE RESPONSIVENESS */
 @media (max-width: 768px) {
     body {

@@ -1,7 +1,6 @@
 declare const tippy: typeof import('tippy.js').default;
 
 import { Column } from '../types/column.js';
-import { Task } from '../types/task.js';
 
 export const columnService = {
     columnMenuOptions: [

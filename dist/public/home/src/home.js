@@ -1,4 +1,4 @@
-import { $ } from "./dom/selectors.js";
+import { $ } from "../../utils/dom/selectors.js";
 import { projectService } from "./services/projectService.js";
 const dom = {
     // Sidebar management
