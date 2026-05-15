@@ -274,13 +274,36 @@ nav {
 .windowsWrapper {
     /* Over sidebar and under nav  */
     z-index: 1750;
-    background-color: var(--secondary-color-partially-transparent);
+    background-color: var(--secondary-color-behind-overlays);
     position: fixed;
     top: var(--nav-height);
     left: 0;
     width: 100%;
     height: calc(100vh - var(--nav-height));
 }
+
+.window {
+    background-color: var(--window-color);
+    width: 30vw;
+    height: calc(var(--full-height) - 20vh);
+    border-radius: 30px;
+}
+
+/* ADD TASK */
+.optionWrapper p {
+    font-size: 25px;
+    margin-bottom: 5px;
+}
+
+
+
+
+
+
+
+
+
+
 
 /* MOBILE RESPONSIVENESS */
 @media (max-width: 768px) {

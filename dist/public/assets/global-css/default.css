@@ -1,7 +1,9 @@
 :root {
     --background-color: #11151C;
     --secondary-color: #121a20;
+    --secondary-color-behind-overlays: #121a20b7;
     --secondary-color-partially-transparent: #121a2060;
+    --window-color: rgb(0, 0, 0);
     --accent-color: #4d4dff;
     --text: #FFFFFF;
     --kanban-text: #c6c90f;
@@ -9,6 +11,7 @@
     --shadow-color: rgba(198, 201, 15, 0.3);
     --not-important-text: #464646;
     --nav-height: 60px;
+    --full-height: calc(100vh - var(--nav-height));
     --sidebar-width: 250px;
     --sidebar-padding: 20px;
 }
@@ -78,4 +81,12 @@ body {
     cursor: pointer;
     border-radius: 5px;
     font-size: 16px;
+}
+
+input {
+    all: unset;
+    background-color: var(--secondary-color);
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
 }
