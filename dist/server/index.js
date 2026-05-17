@@ -90,25 +90,7 @@ await testDB();
 // only for development - TEST FOR DEVELOPMENT - REMOVE AFTER
 if (process.env.NODE_ENV === 'development') {
     app.use('/api', testsRouter);
-    testQueries();
-}
-// DEBUG DEV REMOVE AFTER
-async function testQueries() {
-    try {
-        const [rows] = await db.query('SELECT * FROM projects');
-        const [rows2] = await db.query('SELECT * FROM tasks');
-        const [rows3] = await db.query('SELECT * FROM subtasks');
-        const [rows4] = await db.query('SELECT * FROM user_projects');
-        const [rows5] = await db.query('SELECT * FROM columns');
-        const [rows6] = await db.query('SELECT * FROM users');
-        // console.log(rows, rows2, rows3, rows4, rows5, rows6);
-        // DEBUG - TEST getColumns function
-        // console.log(await getColumns(rows[0]));
-    }
-    catch (e) {
-        console.log(e);
-        throw new Error(`[MySQL] Fatal Error`);
-    }
+    await testDB();
 }
 // API Routes
 app.use('/api', authRouter);

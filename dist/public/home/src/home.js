@@ -1,6 +1,6 @@
 import { $ } from "../../utils/dom/selectors.js";
 import { projectService } from "./services/projectService.js";
-const dom = {
+export const dom = {
     // Sidebar management
     sidebar: $(".sidebar"),
     menuBtn: $(".menuBtn"),
@@ -9,6 +9,19 @@ const dom = {
     content: {
         testBtn: $(".colSettingsBtn"),
         colsWrapper: $(".colsWrapper"),
+    },
+    // Windows
+    windows: {
+        wrapper: $(".windowsWrapper"),
+        addTask: {
+            wrapper: $(".addTaskWindow"),
+            closeBtn: $(".addTaskWindow .closeBtn"),
+            name: $("#addTaskName"),
+            description: $("#addTaskDescription"),
+            column: $("#addTaskColumn"),
+            // columnOptions: $$("#addTaskColumn option") as HTMLOptionElement[],
+            submitBtn: $(".addTaskSubmitBtn"),
+        }
     }
 };
 dom.menuBtn.addEventListener("click", () => {

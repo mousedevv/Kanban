@@ -19,6 +19,7 @@
     <script src="https://unpkg.com/tippy.js@6"></script>
 
     <script type="module" src="./src/home.js" type="module" defer></script>
+    <script type="module" src="./src/UI/closeBtnsHandler.js" type="module" defer></script>
 </head>
 
 <body>
@@ -48,11 +49,31 @@
 
     <div class="windowsWrapper flex">
         <div class="window addTaskWindow flexColNotCenter">
-            <h1>Add task</h1>
+            <button class="closeBtn animateOnHover">
+                <img src="../assets/img/close.png" alt="Close">
+            </button>
 
-            <div class="optionWrapper flexCol">
+            <h1>Add task</h1>
+            <form class="addTaskForm flexCol">
                 <input id="addTaskName" type="text" placeholder="Name">
-            </div>
+
+                <textarea id="addTaskDescription" placeholder="Description"></textarea>
+
+                <div class="optionWrapper addTaskColumnWrapper flex">
+                    <label for="addTaskColumn">Column:</label>
+                    <select id="addTaskColumn">
+                        <option value="c1">22143124</option>
+                        <option value="c2">c2</option>
+                        <option value="c3">c3</option>
+                    </select>
+                </div>
+
+                <div class="separator"></div>
+
+                <h3>Subtasks</h3>
+            </form>
+
+        </div>
         <div class="window hidden"></div>
         <div class="window hidden"></div>
         <div class="window hidden"></div>

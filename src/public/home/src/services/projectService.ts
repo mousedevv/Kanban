@@ -11,6 +11,7 @@ import { taskService } from "./taskService.js";
 import { notification } from "../../../utils/notification.js";
 
 import { $, $$ } from "../../../utils/dom/selectors.js";
+import { UI } from "../UI/UI.js";
 
 const dom = {
     projectBtnWrapper: $(".projectBtnWrapper")! as HTMLDivElement,
@@ -19,6 +20,8 @@ const dom = {
 }
 
 export const projectService = {
+    projects: [] as Project[],
+
     async getProjects() {
         try {
             const res = await fetch(window.location.origin + "/api/get-all-projects", {
@@ -40,10 +43,11 @@ export const projectService = {
 
     async initProjects() {
         const [ projects, roles ] = await this.getProjects();
-        console.log(projects, roles);
+        
+        this.projects = projects;
 
-        this.createProjectBtns(projects, roles);
-        this.createDOMProjects(projects, roles);
+        this.createProjectBtns(this.projects, roles);
+        this.createDOMProjects(this.projects, roles);
     },
 
     createProjectBtns(projects: Project[], roles: ProjectRole[]) {
@@ -147,5 +151,7 @@ export const projectService = {
             }
         });
         dom.homeTab.classList.add('hidden');
+
+        UI.updateWindows(project);
     },
 };

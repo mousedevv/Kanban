@@ -1,12 +1,14 @@
 import { columnService } from "./columnService.js";
 import { taskService } from "./taskService.js";
 import { $, $$ } from "../../../utils/dom/selectors.js";
+import { UI } from "../UI/UI.js";
 const dom = {
     projectBtnWrapper: $(".projectBtnWrapper"),
     projectsWrapper: $(".projectsWrapper"),
     homeTab: $(".home"),
 };
 export const projectService = {
+    projects: [],
     async getProjects() {
         try {
             const res = await fetch(window.location.origin + "/api/get-all-projects", {
@@ -26,9 +28,9 @@ export const projectService = {
     },
     async initProjects() {
         const [projects, roles] = await this.getProjects();
-        console.log(projects, roles);
-        this.createProjectBtns(projects, roles);
-        this.createDOMProjects(projects, roles);
+        this.projects = projects;
+        this.createProjectBtns(this.projects, roles);
+        this.createDOMProjects(this.projects, roles);
     },
     createProjectBtns(projects, roles) {
         const btn = document.createElement('button');
@@ -104,6 +106,7 @@ export const projectService = {
             }
         });
         dom.homeTab.classList.add('hidden');
+        UI.updateWindows(project);
     },
 };
 //# sourceMappingURL=projectService.js.map

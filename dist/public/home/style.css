@@ -283,20 +283,41 @@ nav {
 }
 
 .window {
+    position: relative;
     background-color: var(--window-color);
     width: 30vw;
+    min-width: 450px;
     height: calc(var(--full-height) - 20vh);
     border-radius: 30px;
 }
 
-/* ADD TASK */
-.optionWrapper p {
-    font-size: 25px;
-    margin-bottom: 5px;
+.window .separator {
+    width: 85%;
+    height: 1px;
+    background-color: var(--not-important-text);
 }
 
 
+/* ADD TASK WINDOW */
 
+.addTaskWindow,
+.addTaskForm {
+    gap: 15px;
+}
+
+.addTaskForm {
+    width: 100%;
+}
+
+.addTaskColumnWrapper label {
+    margin-right: 10px;
+}
+
+textarea,
+input {
+    text-align: center;
+    width: 50%;
+}
 
 
 
