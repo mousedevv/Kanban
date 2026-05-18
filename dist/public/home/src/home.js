@@ -20,8 +20,8 @@ export const dom = {
             name: $("#addTaskName"),
             description: $("#addTaskDescription"),
             column: $("#addTaskColumn"),
-            // columnOptions: $$("#addTaskColumn option") as HTMLOptionElement[],
-            // submitBtn: $(".addTaskSubmitBtn")! as HTMLButtonElement,
+            subtasksWrapper: $(".addTaskSubtasksWrapper"),
+            addSubtaskBtn: $(".addTaskAddSubtaskBtn")
         }
     }
 };

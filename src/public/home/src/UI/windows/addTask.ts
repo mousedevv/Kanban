@@ -15,6 +15,7 @@ dom.windows.addTask.form.addEventListener("submit", e => {
     );
 
     if (!col) {
+        console.log("xd");
         notification("Error occurred while adding the task - try again later!", "error");
         return;
     }
@@ -35,6 +36,11 @@ dom.windows.addTask.form.addEventListener("submit", e => {
     }
 
     UI.activeProject.columns.push()
+});
+
+// Add task window - add subtask
+dom.windows.addTask.addSubtaskBtn.addEventListener("click", e => {
+    
 });
 
 // Close

@@ -1,6 +1,7 @@
 :root {
     --background-color: #11151C;
     --secondary-color: #121a20;
+    --third-color: #080b0e;
     --secondary-color-behind-overlays: #121a20b7;
     --secondary-color-partially-transparent: #121a2060;
     --window-color: rgb(0, 0, 0);

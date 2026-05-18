@@ -96,7 +96,6 @@ nav {
     width: calc(100% - var(--sidebar-width) - var(--sidebar-padding));
     height: calc(100vh - var(--nav-height));
     box-sizing: border-box;
-    overflow-y: auto;
 }
 
 .projectHeader {
@@ -298,11 +297,16 @@ nav {
 
 .addTaskWindow,
 .addTaskForm {
+    position: relative;
     gap: 15px;
+    min-height: 600px;
+    height: fit-content;
 }
 
 .addTaskForm {
     width: 100%;
+    min-height: 600px;
+    height: fit-content;
 }
 
 .addTaskColumnWrapper label {
@@ -315,7 +319,54 @@ input {
     width: 50%;
 }
 
+.addTaskSubtasksOptionWrapper {
+    width: 65%;
+    gap: 7px;
+}
 
+.addTaskSubtasksWrapper {
+    width: 100%;
+    gap: 10px;
+}
+
+.addTaskSubtasksWrapper > div:nth-child(n) {
+    background-color: var(--secondary-color);
+}
+
+.addTaskSubtasksWrapper > div:nth-child(2n) {
+    background-color: var(--third-color);
+}
+
+.addTaskSubtask {
+    display: flex;
+    width: 100%;
+    padding: 10px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.addTaskAddSubtaskBtn {
+    border: none;
+    cursor: pointer;
+    color: var(--accent-color);
+    font-size: 35px;
+    width: 100%;
+    background-color: var(--secondary-color-partially-transparent);
+}
+
+.addTaskDeleteSubtask {
+    background-color: var(--background-color);
+    /* color: red; */
+}
+
+.addTaskSubmitBtn {
+    /* position: absolute;
+    bottom: 0; */
+    margin-bottom: 35px;
+    padding: 15px;
+    width: 150px;
+    font-size: 30px;
+}
 
 
 

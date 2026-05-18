@@ -19,7 +19,7 @@
     <script src="https://unpkg.com/tippy.js@6"></script>
 
     <script type="module" src="./src/home.js" type="module" defer></script>
-    <script type="module" src="./src/UI/closeBtnsHandler.js" type="module" defer></script>
+    <script type="module" src="./src/UI/windows/addTask.js" type="module" defer></script>
 </head>
 
 <body>
@@ -54,7 +54,7 @@
             </button>
 
             <h1>Add task</h1>
-            <form class="addTaskForm flexCol">
+            <form class="addTaskForm flexColNotCenter">
                 <input id="addTaskName" type="text" placeholder="Name" required>
 
                 <textarea id="addTaskDescription" placeholder="Description"></textarea>
@@ -70,9 +70,30 @@
 
                 <div class="separator"></div>
 
-                <h3>Subtasks</h3>
+                <div class="addTaskSubtasksOptionWrapper flexColNotCenter">
+                    <h3>Subtasks</h3>
 
-                <button type="submit" class="btn addTaskSubmitBtn">Add</button>
+                    <div class="addTaskSubtasksWrapper flexColNotCenter">
+                        <div class="addTaskSubtask" id="0">
+                            <span>subtask 0 name</span>
+                            <button class="addTaskDeleteSubtask btn animateOnHover" id="0">X</button>
+                        </div>
+
+                        <div class="addTaskSubtask" id="1">
+                            <span>subtask 1 name</span>
+                            <button class="addTaskDeleteSubtask btn animateOnHover" id="1">X</button>
+                        </div>
+
+                        <div class="addTaskSubtask" id="2">
+                            <span>subtask 2 name</span>
+                            <button class="addTaskDeleteSubtask btn animateOnHover" id="2">X</button>
+                        </div>
+                    </div>
+
+                    <button type="button" class="addTaskAddSubtaskBtn animateOnHover">+</button>
+                </div>
+
+                <button type="submit" class="btn addTaskSubmitBtn animateOnHover flex">Add</button>
             </form>
 
         </div>

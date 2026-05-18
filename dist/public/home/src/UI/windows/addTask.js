@@ -7,6 +7,7 @@ dom.windows.addTask.form.addEventListener("submit", e => {
     e.preventDefault();
     const col = projectService.getColumnById(parseInt(dom.windows.addTask.column.value));
     if (!col) {
+        console.log("xd");
         notification("Error occurred while adding the task - try again later!", "error");
         return;
     }
@@ -24,6 +25,9 @@ dom.windows.addTask.form.addEventListener("submit", e => {
         subtasks: subtasks
     };
     UI.activeProject.columns.push();
+});
+// Add task window - add subtask
+dom.windows.addTask.addSubtaskBtn.addEventListener("click", e => {
 });
 // Close
 dom.windows.addTask.closeBtn.addEventListener("click", () => {

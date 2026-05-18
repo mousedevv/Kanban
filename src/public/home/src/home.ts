@@ -24,8 +24,8 @@ export const dom = {
             name: $("#addTaskName")! as HTMLInputElement,
             description: $("#addTaskDescription")! as HTMLTextAreaElement,
             column: $("#addTaskColumn")! as HTMLSelectElement,
-            // columnOptions: $$("#addTaskColumn option") as HTMLOptionElement[],
-            // submitBtn: $(".addTaskSubmitBtn")! as HTMLButtonElement,
+            subtasksWrapper: $(".addTaskSubtasksWrapper"),
+            addSubtaskBtn: $(".addTaskAddSubtaskBtn") as HTMLButtonElement
         }
     }
 }
