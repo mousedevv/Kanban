@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { DBProjectsService } from "../db/projectsService.js";
 const router = Router();
-router.post('/create-project', async (req, res) => {
+router.post('/project/create-project', async (req, res) => {
     const name = req.body.name;
     const description = req.body.description || "";
     if (!name)
@@ -9,7 +9,7 @@ router.post('/create-project', async (req, res) => {
     const project = await DBProjectsService.createProject(name, description, req.session.user);
     return res.json({ project: project });
 });
-router.get(`/get-all-projects`, async (req, res) => {
+router.get(`/project/get-all-projects`, async (req, res) => {
     try {
         const projects = await DBProjectsService.getUserProjectsFormatted(req.session.user);
         return res.json(projects);
@@ -25,6 +25,15 @@ router.get(`/get-all-projects`, async (req, res) => {
             default:
                 return res.sendStatus(500);
         }
+    }
+});
+router.post(`/project/add-task`, async (req, res) => {
+    try {
+        const task = DBProjectsService.addTask(req.body);
+        return res.json(task);
+    }
+    catch (e) {
+        return res.sendStatus(500);
     }
 });
 export default router;

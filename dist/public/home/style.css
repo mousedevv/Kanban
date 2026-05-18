@@ -4,10 +4,6 @@ body {
     display: flex;
 }
 
-.btn {
-    width: 100%;
-}
-
 /* NAV & menuBtn (mobile only) */
 nav {
     z-index: 2000;
@@ -318,9 +314,6 @@ input {
     text-align: center;
     width: 50%;
 }
-
-
-
 
 
 

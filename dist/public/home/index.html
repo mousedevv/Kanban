@@ -55,13 +55,13 @@
 
             <h1>Add task</h1>
             <form class="addTaskForm flexCol">
-                <input id="addTaskName" type="text" placeholder="Name">
+                <input id="addTaskName" type="text" placeholder="Name" required>
 
                 <textarea id="addTaskDescription" placeholder="Description"></textarea>
 
                 <div class="optionWrapper addTaskColumnWrapper flex">
                     <label for="addTaskColumn">Column:</label>
-                    <select id="addTaskColumn">
+                    <select id="addTaskColumn" required>
                         <option value="c1">22143124</option>
                         <option value="c2">c2</option>
                         <option value="c3">c3</option>
@@ -71,6 +71,8 @@
                 <div class="separator"></div>
 
                 <h3>Subtasks</h3>
+
+                <button type="submit" class="btn addTaskSubmitBtn">Add</button>
             </form>
 
         </div>

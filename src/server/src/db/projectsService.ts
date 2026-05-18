@@ -1,4 +1,4 @@
-import { userRow, projectRow, userProjectsRow } from "../../types/types.js";
+import { userRow, projectRow, userProjectsRow, taskRow } from "../../types/types.js";
 import { ResultSetHeader } from "mysql2";
 import { db } from "../../index.js";
 import { Project } from "../../types/project.js";
@@ -6,6 +6,8 @@ import { Column } from "../../types/column.js";
 import { User } from "../../types/user.js";
 
 import { getColumns } from "./getters.js";
+import { TaskDraft } from "../../../public/home/src/types/task.js";
+import { Task } from "../../types/task.js";
 
 export const DBProjectsService = {
     async generateUUID(): Promise<string> {
@@ -17,6 +19,25 @@ export const DBProjectsService = {
 
             if (!rows[0] || rows[0].length === 0) return UUID;
         }
+    },
+
+    async addTask(taskDraft: TaskDraft): Promise<Task | void> {
+        // it's not taskRow, but it allows using types
+        const [rows] = await db.execute<taskRow[]>(
+            "INSERT INTO `tasks`(`project_id`, `column_id`, `name`, `description`, `label_id`, `done`) VALUES (?, ?, ?, ?, ?, ?)",
+            [
+                taskDraft.project_id,
+                taskDraft.column_id,
+                taskDraft.name,
+                taskDraft.description,
+                taskDraft.label_id,
+                taskDraft.done
+            ]
+        )
+
+        rows[0].
+
+        const [rows2] = await db.execute<taskRow>()
     },
 
     // DEPRECATED

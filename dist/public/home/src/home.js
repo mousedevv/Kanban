@@ -15,12 +15,13 @@ export const dom = {
         wrapper: $(".windowsWrapper"),
         addTask: {
             wrapper: $(".addTaskWindow"),
+            form: $(".addTaskForm"),
             closeBtn: $(".addTaskWindow .closeBtn"),
             name: $("#addTaskName"),
             description: $("#addTaskDescription"),
             column: $("#addTaskColumn"),
             // columnOptions: $$("#addTaskColumn option") as HTMLOptionElement[],
-            submitBtn: $(".addTaskSubmitBtn"),
+            // submitBtn: $(".addTaskSubmitBtn")! as HTMLButtonElement,
         }
     }
 };

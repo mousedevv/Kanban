@@ -10,10 +10,12 @@ import { taskService } from "./taskService.js";
 
 import { notification } from "../../../utils/notification.js";
 
+import { dom } from "../home.js";
+
 import { $, $$ } from "../../../utils/dom/selectors.js";
 import { UI } from "../UI/UI.js";
 
-const dom = {
+const localDom = {
     projectBtnWrapper: $(".projectBtnWrapper")! as HTMLDivElement,
     projectsWrapper: $(".projectsWrapper")! as HTMLDivElement,
     homeTab: $(".home")! as HTMLDivElement,
@@ -22,9 +24,98 @@ const dom = {
 export const projectService = {
     projects: [] as Project[],
 
+    /*
+  [
+    {
+      "id": 1,
+      "UUID": "1e74c082-61d7-4c89-a2bf-8766b6fb4751",
+      "name": "TEST PROJECT",
+      "description": "Description of the test project",
+      "created_at": "2026-04-08T19:22:09.000Z",
+      "columns": [
+        {
+          "id": 5,
+          "project_id": 1,
+          "name": "Test Column 1",
+          "tasks": [
+            {
+              "id": 2,
+              "project_id": 1,
+              "column_id": 5,
+              "name": "Task 1 Col 1",
+              "description": "Task 1 Col 1 description",
+              "done": true,
+              "label_id": null,
+              "created_at": "2026-04-08T19:26:41.000Z",
+              "subtasks": [
+                {
+                  "id": 1,
+                  "task_id": 2,
+                  "name": "Subtask 1 Task 1 Col 1",
+                  "done": 0,
+                  "created_at": "2026-04-08T19:29:14.000Z"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "project_id": 1,
+          "name": "Test Column 2",
+          "tasks": [
+            {
+              "id": 3,
+              "project_id": 1,
+              "column_id": 6,
+              "name": "Task 1 Col 2",
+              "description": "Task 1 Col 2 description",
+              "done": false,
+              "label_id": 1,
+              "created_at": "2026-04-08T19:26:41.000Z",
+              "subtasks": [
+                {
+                  "id": 2,
+                  "task_id": 3,
+                  "name": "Subtask 1 Task 1 Col 2",
+                  "done": 1,
+                  "created_at": "2026-04-08T19:29:14.000Z"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "UUID": "2f31c082-61d7-4c89-a2bf-8766b6fb4751",
+      "name": "Bartkowy projekt",
+      "description": "opis projektu",
+      "created_at": "2026-04-15T17:43:01.000Z",
+      "columns": []
+    },
+    {
+      "id": 3,
+      "UUID": "1f559b2e-ce6c-1111-9f1c-f7a26adc3122",
+      "name": "pusty projekt testowy",
+      "description": "xdd",
+      "created_at": "2026-04-16T20:09:53.000Z",
+      "columns": []
+    }
+  ]
+    */
+
+    getColumnById(id: number): Column | void {
+        return this.projects
+            .map(project => project.columns)
+            .flat(1)
+            .find(col => col.id === id)
+    },
+
     async getProjects() {
         try {
-            const res = await fetch(window.location.origin + "/api/get-all-projects", {
+            const res = await fetch(window.location.origin + "/api/project/get-all-projects", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -35,15 +126,14 @@ export const projectService = {
             return data;
         }
         catch (e) {
-            // DEBUG - disable notification for development
-            // notification("Something went wrong - try again later!", "error");
-            throw new Error("Something went wrong - try again later!");
+            notification("Something went wrong - try again later!", "error");
+            return;
         }
     },
 
     async initProjects() {
-        const [ projects, roles ] = await this.getProjects();
-        
+        const [projects, roles] = await this.getProjects();
+
         this.projects = projects;
 
         this.createProjectBtns(this.projects, roles);
@@ -65,7 +155,7 @@ export const projectService = {
 
         btn.appendChild(homeIcon);
 
-        dom.projectBtnWrapper.appendChild(btn);
+        localDom.projectBtnWrapper.appendChild(btn);
 
         projects.forEach(project => {
             const btn = document.createElement('button');
@@ -76,7 +166,7 @@ export const projectService = {
                 this.changeOpenedProject(project);
             });
 
-            dom.projectBtnWrapper.appendChild(btn);
+            localDom.projectBtnWrapper.appendChild(btn);
         });
     },
 
@@ -91,7 +181,7 @@ export const projectService = {
 
             const projectHeader = document.createElement('div');
             projectHeader.classList.add(
-                'projectHeader', 
+                'projectHeader',
             );
 
             const projectName = document.createElement('h2');
@@ -102,8 +192,8 @@ export const projectService = {
             addTaskBtn.classList.add('addTaskBtn');
             addTaskBtn.textContent = 'Add task';
             addTaskBtn.addEventListener('click', () => {
-                // DEBUG
-                console.log("[PLACEHOLDER] Add task to project: " + project.name);
+                dom.windows.wrapper.classList.remove("hidden");
+                dom.windows.addTask.wrapper.classList.remove("hidden");
             });
             projectHeader.appendChild(addTaskBtn);
 
@@ -125,7 +215,7 @@ export const projectService = {
 
             projectContent.appendChild(colsWrapper);
 
-            dom.projectsWrapper.appendChild(projectContent);
+            localDom.projectsWrapper.appendChild(projectContent);
         });
     },
 
@@ -137,7 +227,7 @@ export const projectService = {
         });
 
         // Show home tab only
-        dom.homeTab.classList.remove('hidden');
+        localDom.homeTab.classList.remove('hidden');
     },
 
     changeOpenedProject(project: Project) {
@@ -150,7 +240,7 @@ export const projectService = {
                 projectContent.classList.add('hidden');
             }
         });
-        dom.homeTab.classList.add('hidden');
+        localDom.homeTab.classList.add('hidden');
 
         UI.updateWindows(project);
     },

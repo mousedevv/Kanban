@@ -1,4 +1,21 @@
+import { Task } from "../types/task.js";
+import { UI } from "../UI/UI.js";
+import { notification } from "../../../utils/notification.js";
 export const taskService = {
+    async addTask(taskDraft) {
+        try {
+            const res = await fetch("/api/project/add-task", {
+                method: "POST",
+                body: JSON.stringify({ project_id: UI.activeProject.id, taskDraft: taskDraft }),
+            });
+            const rJ = await res.json();
+            return new Task(rJ.id, rJ.project_id, rJ.column_id, rJ.name, rJ.description, Boolean(rJ.done), rJ.label_id, rJ.created_at, rJ.subtasks);
+        }
+        catch (e) {
+            notification("Error occurred while adding the task - try again later!", "error");
+            return;
+        }
+    },
     createDOMElement(task) {
         // <div class="task" id="task1">
         //     <div class="taskTitleRow">

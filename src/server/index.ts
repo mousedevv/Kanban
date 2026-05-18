@@ -118,8 +118,6 @@ await testDB();
 // only for development - TEST FOR DEVELOPMENT - REMOVE AFTER
 if (process.env.NODE_ENV === 'development') {
     app.use('/api', testsRouter);
-
-    await testDB();
 }
 
 // API Routes

@@ -2,10 +2,11 @@ import { Router } from "express";
 
 import { DBProjectsService } from "../db/projectsService.js";
 import { Project } from "../../types/project.js";
+import { Task } from "../../types/task.js";
 
 const router = Router();
 
-router.post('/create-project', async (req, res) => {
+router.post('/project/create-project', async (req, res) => {
     const name = req.body.name;
     const description = req.body.description || "";
 
@@ -16,7 +17,7 @@ router.post('/create-project', async (req, res) => {
     return res.json({ project: project });
 });
 
-router.get(`/get-all-projects`, async (req, res) => {
+router.get(`/project/get-all-projects`, async (req, res) => {
     try {
         const projects = await DBProjectsService.getUserProjectsFormatted(req.session.user!);
         return res.json(projects);
@@ -33,5 +34,13 @@ router.get(`/get-all-projects`, async (req, res) => {
         }
     }
 });
+
+router.post(`/project/add-task`, async (req, res) => {
+    try {
+        const task: Task = DBProjectsService.addTask(req.body);
+        return res.json(task);
+    } catch (e: Error | any) {
+        return res.sendStatus(500);
+    });
 
 export default router;

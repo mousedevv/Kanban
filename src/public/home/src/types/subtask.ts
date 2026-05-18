@@ -13,3 +13,8 @@ export class Subtask {
         this.created_at = created_at;
     }
 }
+
+export interface SubtaskDraft {
+    name: string;
+    done: number | boolean;
+}

@@ -19,12 +19,13 @@ export const dom = {
         wrapper: $(".windowsWrapper")! as HTMLDivElement,
         addTask: {
             wrapper: $(".addTaskWindow")! as HTMLDivElement,
+            form: $(".addTaskForm") as HTMLFormElement,
             closeBtn: $(".addTaskWindow .closeBtn")! as HTMLButtonElement,
             name: $("#addTaskName")! as HTMLInputElement,
             description: $("#addTaskDescription")! as HTMLTextAreaElement,
             column: $("#addTaskColumn")! as HTMLSelectElement,
             // columnOptions: $$("#addTaskColumn option") as HTMLOptionElement[],
-            submitBtn: $(".addTaskSubmitBtn")! as HTMLButtonElement,
+            // submitBtn: $(".addTaskSubmitBtn")! as HTMLButtonElement,
         }
     }
 }

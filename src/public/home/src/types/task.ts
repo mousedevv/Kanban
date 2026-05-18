@@ -1,4 +1,4 @@
-import { Subtask } from "./subtask.js";
+import { Subtask, SubtaskDraft } from "./subtask.js";
 
 export class Task {
     constructor(
@@ -22,4 +22,14 @@ export class Task {
         this.created_at = created_at;
         this.subtasks = subtasks;
     }
+}
+
+export interface TaskDraft {
+    project_id: number,
+    column_id: number,
+    name: string;
+    description: string;
+    done: number | boolean;
+    label_id: number;
+    subtasks: SubtaskDraft[]
 }

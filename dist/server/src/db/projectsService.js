@@ -10,6 +10,19 @@ export const DBProjectsService = {
                 return UUID;
         }
     },
+    async addTask(taskDraft) {
+        // it's not taskRow, but it allows using types
+        const [rows] = await db.execute("INSERT INTO `tasks`(`project_id`, `column_id`, `name`, `description`, `label_id`, `done`) VALUES (?, ?, ?, ?, ?, ?)", [
+            taskDraft.project_id,
+            taskDraft.column_id,
+            taskDraft.name,
+            taskDraft.description,
+            taskDraft.label_id,
+            taskDraft.done
+        ]);
+        rows[0].
+            const[rows2] = await db.execute();
+    },
     // DEPRECATED
     // async authorizeProjectAccess(user: User, projectUUID: string) {
     //     const [rows] = await db.execute<userRow[]>(
