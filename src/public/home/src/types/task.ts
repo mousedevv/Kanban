@@ -7,8 +7,8 @@ export class Task {
         public column_id: number,
         public name: string,
         public description: string,
-        public done: number | boolean,
-        public label_id: number | null,
+        public done: boolean,
+        // public label_id: number | null,
         public created_at: string,
         public subtasks: Subtask[]
     ) {
@@ -18,7 +18,7 @@ export class Task {
         this.name = name;
         this.description = description;
         this.done = Boolean(done);
-        this.label_id = label_id;
+        // this.label_id = label_id;
         this.created_at = created_at;
         this.subtasks = subtasks;
     }
@@ -29,7 +29,7 @@ export interface TaskDraft {
     column_id: number,
     name: string;
     description: string;
-    done: number | boolean;
-    label_id: number;
+    done: boolean;
+    // label_id: number;
     subtasks: SubtaskDraft[]
 }

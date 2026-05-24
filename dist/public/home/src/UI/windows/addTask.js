@@ -21,7 +21,7 @@ dom.windows.addTask.form.addEventListener("submit", e => {
         name: dom.windows.addTask.name.value,
         description: dom.windows.addTask.description.value,
         done: false,
-        label_id: 1, // Placeholder
+        // label_id: 1, // Placeholder
         subtasks: subtasks
     };
     UI.activeProject.columns.push();

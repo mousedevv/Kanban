@@ -1,6 +1,9 @@
 import { db } from "../../index.js";
 import { Project } from "../../types/project.js";
+import { Column } from "../../types/column.js";
 import { getColumns } from "./getters.js";
+import { Task } from "../../types/task.js";
+import { Subtask } from "../../types/subtask.js";
 export const DBProjectsService = {
     async generateUUID() {
         while (true) {
@@ -10,27 +13,42 @@ export const DBProjectsService = {
                 return UUID;
         }
     },
+    async addColumn(columnDraft) {
+        const [rows] = await db.execute("INSERT INTO `columns`(`project_id`, `name`) VALUES (?, ?)", [columnDraft.project_id, columnDraft.name]);
+        return new Column(rows.insertId, columnDraft.project_id, columnDraft.name, []);
+    },
     async addTask(taskDraft) {
-        // it's not taskRow, but it allows using types
-        const [rows] = await db.execute("INSERT INTO `tasks`(`project_id`, `column_id`, `name`, `description`, `label_id`, `done`) VALUES (?, ?, ?, ?, ?, ?)", [
+        // Add task
+        const [rows] = await db.execute("INSERT INTO `tasks`(`project_id`, `column_id`, `name`, `description`, `done`) VALUES (?, ?, ?, ?, ?)", [
             taskDraft.project_id,
             taskDraft.column_id,
             taskDraft.name,
             taskDraft.description,
-            taskDraft.label_id,
+            // taskDraft.label_id,
             taskDraft.done
         ]);
-        rows[0].
-            const[rows2] = await db.execute();
+        // Extract created_at property created by MySQL
+        const [rows2] = await db.execute("SELECT * FROM `tasks` WHERE id = ?", [rows.insertId]);
+        if (!rows2[0])
+            throw new Error("Task not found");
+        const subtasks = [];
+        for (const subtaskDraft of taskDraft.subtasks) {
+            // Add every subtask
+            const [rows3] = await db.execute("INSERT INTO `subtasks`(`task_id`, `name`, `done`) VALUES (?, ?, ?)", [rows2[0].id, subtaskDraft.name, subtaskDraft.done]);
+            // Extract created_at property created by MySQL
+            const [rows4] = await db.execute("SELECT * FROM `subtasks` WHERE id = ?", [rows3.insertId]);
+            if (!rows4[0])
+                throw new Error("Subtask not found");
+            subtasks.push(new Subtask(rows3.insertId, rows2[0].id, subtaskDraft.name, subtaskDraft.done, rows4[0].created_at));
+        }
+        return new Task(rows2[0].id, rows2[0].project_id, rows2[0].column_id, rows2[0].name, rows2[0].description, rows2[0].done, rows2[0].label_id, rows2[0].created_at, subtasks);
     },
-    // DEPRECATED
-    // async authorizeProjectAccess(user: User, projectUUID: string) {
-    //     const [rows] = await db.execute<userRow[]>(
-    //         `SELECT * FROM user_projects WHERE user_id = ? AND project_id = ?`, [user.id, projectUUID]
-    //     );
-    //     if (rows[0].length > 0) return rows[0].role;
-    //     else throw new Error("Forbidden");
-    // },
+    async authorizeProjectAccess(user, projectId) {
+        const [rows] = await db.execute(`SELECT * FROM user_projects WHERE user_id = ? AND project_id = ?`, [user.id, projectId]);
+        if (!rows[0])
+            throw new Error("Forbidden");
+        return rows[0].role;
+    },
     async createProject(name, description, user) {
         const UUID = await this.generateUUID();
         const [rows1] = await db.execute('INSERT INTO projects (`UUID`, `name`, `description`) VALUES (?, ?, ?)', [UUID, name, description]);

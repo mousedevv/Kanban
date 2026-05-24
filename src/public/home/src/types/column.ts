@@ -13,3 +13,8 @@ export class Column {
         this.tasks = tasks;
     }
 }
+
+export interface ColumnDraft {
+    project_id: number;
+    name: string;
+}

@@ -15,6 +15,6 @@ export class Subtask {
 }
 
 export interface SubtaskDraft {
-    name: string;
-    done: number | boolean;
+    name: string,
+    done: boolean
 }

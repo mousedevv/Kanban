@@ -3,7 +3,7 @@ import { DBProjectsService } from "../db/projectsService.js";
 const router = Router();
 console.log(`Starting in ${process.env.NODE_ENV} mode...`);
 if (process.env.NODE_ENV === 'development') {
-    // TEST ENDPOINTS - DEBUG - REMOVE AFTER
+    // TEST ENDPOINTS - DEBUG
     router.get('/create-test-session', (req, res) => {
         req.session.user = {
             id: 99999999,

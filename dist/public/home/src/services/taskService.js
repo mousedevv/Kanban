@@ -9,7 +9,9 @@ export const taskService = {
                 body: JSON.stringify({ project_id: UI.activeProject.id, taskDraft: taskDraft }),
             });
             const rJ = await res.json();
-            return new Task(rJ.id, rJ.project_id, rJ.column_id, rJ.name, rJ.description, Boolean(rJ.done), rJ.label_id, rJ.created_at, rJ.subtasks);
+            return new Task(rJ.id, rJ.project_id, rJ.column_id, rJ.name, rJ.description, Boolean(rJ.done), 
+            // rJ.label_id,
+            rJ.created_at, rJ.subtasks);
         }
         catch (e) {
             notification("Error occurred while adding the task - try again later!", "error");

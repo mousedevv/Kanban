@@ -22,7 +22,7 @@ export const taskService = {
                 rJ.name,
                 rJ.description,
                 Boolean(rJ.done),
-                rJ.label_id,
+                // rJ.label_id,
                 rJ.created_at,
                 rJ.subtasks
             );
