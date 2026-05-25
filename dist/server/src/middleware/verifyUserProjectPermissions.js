@@ -5,6 +5,7 @@ export async function verifyUserProjectPermissions(req, res, next) {
     try {
         // DEBUG
         console.log(req.session.user);
+        console.log(req.body);
         await DBProjectsService.authorizeProjectAccess(req.session.user, req.body.project_id);
         next();
     }

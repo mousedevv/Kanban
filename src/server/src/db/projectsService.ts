@@ -34,6 +34,7 @@ export const DBProjectsService = {
     },
 
     async addTask(taskDraft: TaskDraft): Promise<Task> {
+        console.log(taskDraft);
         // Add task
         const [rows] = await db.execute<ResultSetHeader>(
             "INSERT INTO `tasks`(`project_id`, `column_id`, `name`, `description`, `done`) VALUES (?, ?, ?, ?, ?)",

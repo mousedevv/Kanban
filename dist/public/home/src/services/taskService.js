@@ -4,8 +4,12 @@ import { notification } from "../../../utils/notification.js";
 export const taskService = {
     async addTask(taskDraft) {
         try {
+            console.log(taskDraft);
             const res = await fetch("/api/project/add-task", {
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify({ project_id: UI.activeProject.id, taskDraft: taskDraft }),
             });
             const rJ = await res.json();

@@ -339,7 +339,7 @@ input {
 
 .addTaskSubtask {
     display: flex;
-    width: 100%;
+    width: fit-content;
     padding: 10px;
     justify-content: space-between;
     align-items: center;
@@ -354,14 +354,26 @@ input {
     background-color: var(--secondary-color-partially-transparent);
 }
 
+.addTaskSubtaskDone {
+    accent-color: var(--accent-color) !important;
+    width: 30px;
+    transform: scale(2.5);
+    border: none;
+    padding: 10px;
+    margin: 2px;
+}
+
+.addTaskSubtaskNameInput {
+    background-color: transparent !important;
+    width: 100%;
+}
+
 .addTaskDeleteSubtask {
     background-color: var(--background-color);
     /* color: red; */
 }
 
 .addTaskSubmitBtn {
-    /* position: absolute;
-    bottom: 0; */
     margin-bottom: 35px;
     padding: 15px;
     width: 150px;

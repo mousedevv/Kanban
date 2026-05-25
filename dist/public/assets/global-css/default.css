@@ -89,7 +89,7 @@ body {
     font-size: 16px;
 }
 
-input {
+input:not([type="checkbox"]) {
     all: unset;
     background-color: var(--secondary-color);
     padding: 10px;

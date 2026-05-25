@@ -30,11 +30,7 @@ router.post(`/project/add-task`, verifyUserProjectPermissions, async (req, res) 
     try {
         const task = await DBProjectsService.addTask({
             project_id: req.body.project_id,
-            column_id: req.body.column_id,
-            name: req.body.name,
-            description: req.body.description,
-            done: req.body.done,
-            subtasks: req.body.subtasks
+            ...req.body.taskDraft
         });
         return res.json(task);
     }
