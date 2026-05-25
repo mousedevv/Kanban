@@ -86,22 +86,6 @@ export const projectService = {
           ]
         }
       ]
-    },
-    {
-      "id": 2,
-      "UUID": "2f31c082-61d7-4c89-a2bf-8766b6fb4751",
-      "name": "Bartkowy projekt",
-      "description": "opis projektu",
-      "created_at": "2026-04-15T17:43:01.000Z",
-      "columns": []
-    },
-    {
-      "id": 3,
-      "UUID": "1f559b2e-ce6c-1111-9f1c-f7a26adc3122",
-      "name": "pusty projekt testowy",
-      "description": "xdd",
-      "created_at": "2026-04-16T20:09:53.000Z",
-      "columns": []
     }
   ]
     */
@@ -131,16 +115,23 @@ export const projectService = {
         }
     },
 
+    drawProjects() {
+        this.createProjectBtns(this.projects);
+        this.createDOMProjects(this.projects);
+    },
+
     async initProjects() {
-        const [projects, roles] = await this.getProjects();
+        const projects = await this.getProjects();
 
         this.projects = projects;
 
-        this.createProjectBtns(this.projects, roles);
-        this.createDOMProjects(this.projects, roles);
+        this.drawProjects();
     },
 
-    createProjectBtns(projects: Project[], roles: ProjectRole[]) {
+    createProjectBtns(projects: Project[]) {
+        // Reset project buttons
+        localDom.projectBtnWrapper.innerHTML = "";
+
         const btn = document.createElement('button');
 
         btn.classList.add('btn', "openHomeBtn");
@@ -170,7 +161,10 @@ export const projectService = {
         });
     },
 
-    createDOMProjects(projects: Project[], roles: ProjectRole[]) {
+    createDOMProjects(projects: Project[]) {
+        console.log(projects);
+
+        localDom.projectsWrapper.innerHTML = '';
         projects.forEach(project => {
             const projectContent = document.createElement('div');
             projectContent.classList.add(

@@ -55,6 +55,8 @@ dom.windows.addTask.form.addEventListener("submit", async e => {
         UI.activeProject.columns
         .findIndex(el => el.id = col.id)
     ].tasks.push(addedTask);
+
+    UI.draw(UI.activeProject);
 });
 
 // Add task window - add subtask

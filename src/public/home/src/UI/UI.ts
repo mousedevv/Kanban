@@ -5,6 +5,16 @@ import { Project } from "../types/project.js";
 export const UI = {
     activeProject: {} as Project,
 
+    draw(project: Project | null) {
+        if (!project) {
+            project = this.activeProject;
+        }
+
+        projectService.drawProjects();
+
+        this.updateWindows(project);
+    },
+
     updateWindows(project: Project) {
         this.activeProject = project;
 

@@ -90,8 +90,9 @@ export const DBProjectsService = {
             formattedProjects.push(project);
         }
         // Get projects user roles
-        const roles = rows2.map((row) => row.role);
-        return [formattedProjects, roles];
+        // DEPRECATED
+        // const roles = rows2.map((row: userProjectsRow) => row.role);
+        return formattedProjects;
     },
 };
 //# sourceMappingURL=projectsService.js.map

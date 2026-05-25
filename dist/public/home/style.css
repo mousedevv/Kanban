@@ -105,7 +105,7 @@ nav {
     top: 0;
     left: 0;
     z-index: 10;
-    background-color: inherit;
+    background-color: var(--secondary-color-partially-transparent);
     margin-bottom: 15px;
 }
 

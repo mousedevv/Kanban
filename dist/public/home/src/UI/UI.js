@@ -1,6 +1,14 @@
 import { dom } from "../home.js";
+import { projectService } from "../services/projectService.js";
 export const UI = {
     activeProject: {},
+    draw(project) {
+        if (!project) {
+            project = this.activeProject;
+        }
+        projectService.drawProjects();
+        this.updateWindows(project);
+    },
     updateWindows(project) {
         this.activeProject = project;
         this.updateAddTaskWindow();

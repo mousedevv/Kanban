@@ -30,6 +30,17 @@
     box-sizing: border-box;
 }
 
+.scroll {
+    scroll-behavior: smooth;
+    overflow: auto;
+}
+
+.scrollY {
+    scroll-behavior: smooth;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
 .flex,
 .flexCol {
     display: flex;

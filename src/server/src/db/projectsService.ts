@@ -145,7 +145,7 @@ export const DBProjectsService = {
     //     return rows[0];
     // },
 
-    async getUserProjectsFormatted(user: User) {
+    async getUserProjectsFormatted(user: User): Promise<Project[]> {
         const [rows1] = await db.execute<userRow[]>(`SELECT * FROM users WHERE UUID = ?`, [user.UUID]);
         const [rows2] = await db.execute<userProjectsRow[]>(`SELECT * FROM user_projects WHERE user_id = ?`, [user.id]);
 
@@ -184,8 +184,9 @@ export const DBProjectsService = {
         }
 
         // Get projects user roles
-        const roles = rows2.map((row: userProjectsRow) => row.role);
+        // DEPRECATED
+        // const roles = rows2.map((row: userProjectsRow) => row.role);
 
-        return [formattedProjects, roles];
+        return formattedProjects;
     },
 }
