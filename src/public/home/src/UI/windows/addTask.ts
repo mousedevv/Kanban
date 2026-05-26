@@ -56,7 +56,9 @@ dom.windows.addTask.form.addEventListener("submit", async e => {
         .findIndex(el => el.id = col.id)
     ].tasks.push(addedTask);
 
-    UI.draw(UI.activeProject);
+    closeAddTaskWindow();
+
+    await UI.draw(UI.activeProject);
 });
 
 // Add task window - add subtask
@@ -100,6 +102,17 @@ dom.windows.addTask.addSubtaskBtn.addEventListener("click", e => {
 
 // Close
 dom.windows.addTask.closeBtn.addEventListener("click", () => {
+    closeAddTaskWindow();
+});
+
+function closeAddTaskWindow() {
     dom.windows.addTask.wrapper.classList.add("hidden");
     dom.windows.wrapper.classList.add("hidden");
-});
+    clearAddTaskWindow();
+}
+
+function clearAddTaskWindow() {
+    dom.windows.addTask.name.value = "";
+    dom.windows.addTask.description.value = "";
+    dom.windows.addTask.subtasksWrapper.innerHTML = "";
+}

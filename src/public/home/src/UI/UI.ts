@@ -1,3 +1,4 @@
+import { $$ } from "../../../utils/dom/selectors.js";
 import { dom } from "../home.js";
 import { projectService } from "../services/projectService.js";
 import { Project } from "../types/project.js";
@@ -5,23 +6,23 @@ import { Project } from "../types/project.js";
 export const UI = {
     activeProject: {} as Project,
 
-    draw(project: Project | null) {
+    async draw(project: Project | null) {
         if (!project) {
             project = this.activeProject;
         }
 
-        projectService.drawProjects();
+        await projectService.drawProjects(false, project);
 
-        this.updateWindows(project);
+        await this.updateWindows(project);
     },
 
-    updateWindows(project: Project) {
+    async updateWindows(project: Project) {
         this.activeProject = project;
 
-        this.updateAddTaskWindow();
+        await this.updateAddTaskWindow();
     },
     
-    updateAddTaskWindow() {
+    async updateAddTaskWindow() {
         // Update column field
         dom.windows.addTask.column.innerHTML = "";
 
@@ -31,13 +32,6 @@ export const UI = {
             option.textContent = column.name;
             dom.windows.addTask.column.appendChild(option);
         })
-    
-        // projectService.projects.forEach(project => {
-        //     const option = document.createElement('option');
-        //     option.value = activeProject.UUID;
-        //     option.textContent = project.name;
-        //     dom.windows.addTask.column.appendChild(option);
-        // });
     }
 }
 

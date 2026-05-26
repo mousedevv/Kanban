@@ -2,18 +2,18 @@ import { dom } from "../home.js";
 import { projectService } from "../services/projectService.js";
 export const UI = {
     activeProject: {},
-    draw(project) {
+    async draw(project) {
         if (!project) {
             project = this.activeProject;
         }
-        projectService.drawProjects();
-        this.updateWindows(project);
+        await projectService.drawProjects(false, project);
+        await this.updateWindows(project);
     },
-    updateWindows(project) {
+    async updateWindows(project) {
         this.activeProject = project;
-        this.updateAddTaskWindow();
+        await this.updateAddTaskWindow();
     },
-    updateAddTaskWindow() {
+    async updateAddTaskWindow() {
         // Update column field
         dom.windows.addTask.column.innerHTML = "";
         this.activeProject.columns.forEach(column => {
@@ -22,12 +22,6 @@ export const UI = {
             option.textContent = column.name;
             dom.windows.addTask.column.appendChild(option);
         });
-        // projectService.projects.forEach(project => {
-        //     const option = document.createElement('option');
-        //     option.value = activeProject.UUID;
-        //     option.textContent = project.name;
-        //     dom.windows.addTask.column.appendChild(option);
-        // });
     }
 };
 //# sourceMappingURL=UI.js.map

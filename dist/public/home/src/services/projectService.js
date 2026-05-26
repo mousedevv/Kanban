@@ -99,16 +99,16 @@ export const projectService = {
             return;
         }
     },
-    drawProjects() {
-        this.createProjectBtns(this.projects);
-        this.createDOMProjects(this.projects);
+    async drawProjects(showHomeTab = true, activeProject = null) {
+        await this.createProjectBtns(this.projects);
+        await this.createDOMProjects(this.projects, showHomeTab, activeProject);
     },
     async initProjects() {
         const projects = await this.getProjects();
         this.projects = projects;
-        this.drawProjects();
+        await this.drawProjects();
     },
-    createProjectBtns(projects) {
+    async createProjectBtns(projects) {
         // Reset project buttons
         localDom.projectBtnWrapper.innerHTML = "";
         const btn = document.createElement('button');
@@ -131,12 +131,29 @@ export const projectService = {
             localDom.projectBtnWrapper.appendChild(btn);
         });
     },
-    createDOMProjects(projects) {
-        console.log(projects);
+    async createDOMProjects(projects, showHomeTab = true, activeProject = null) {
         localDom.projectsWrapper.innerHTML = '';
+        // Add home "project"
+        // <div class="home">
+        //     <h1>Hello!</h1>
+        //     <h2>Choose a project or...</h2>
+        //     <h2>...create a new one to get started!</h2>
+        // </div>
+        const home = document.createElement('div');
+        home.classList.add('home');
+        // Show home tab if there is no active project and showHomeTab is true, otherwise hide it
+        UI.activeProject && !showHomeTab ? home.classList.add('hidden') : null;
+        home.innerHTML = `
+            <h1>Hello!</h1>
+            <h2>Choose a project or...</h2>
+            <h2>...create a new one to get started!</h2>
+        `;
+        localDom.projectsWrapper.appendChild(home);
         projects.forEach(project => {
             const projectContent = document.createElement('div');
-            projectContent.classList.add('projectContent', 'hidden');
+            projectContent.classList.add('projectContent');
+            // Show project if it's the active one, otherwise hide it
+            activeProject && activeProject.UUID === project.UUID ? null : projectContent.classList.add('hidden');
             projectContent.id = project.UUID;
             const projectHeader = document.createElement('div');
             projectHeader.classList.add('projectHeader');
@@ -162,6 +179,11 @@ export const projectService = {
                 });
                 colsWrapper.appendChild(col);
             });
+            // Create "Add column" button
+            const addColBtn = document.createElement('button');
+            addColBtn.classList.add('addColBtn', 'addBtn', 'animateOnHover', 'btn');
+            addColBtn.textContent = '+';
+            colsWrapper.appendChild(addColBtn);
             projectContent.appendChild(colsWrapper);
             localDom.projectsWrapper.appendChild(projectContent);
         });
@@ -173,7 +195,7 @@ export const projectService = {
             projectContent.classList.add('hidden');
         });
         // Show home tab only
-        localDom.homeTab.classList.remove('hidden');
+        $(".home").classList.remove('hidden');
     },
     changeOpenedProject(project) {
         const projects = $$(".projectContent");
@@ -185,7 +207,7 @@ export const projectService = {
                 projectContent.classList.add('hidden');
             }
         });
-        localDom.homeTab.classList.add('hidden');
+        $(".home").classList.add('hidden');
         UI.updateWindows(project);
     },
 };

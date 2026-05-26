@@ -60,15 +60,6 @@ export const DBProjectsService = {
         const [rows2] = await db.execute('INSERT INTO user_projects (`project_id`, `role`, `user_id`) VALUES (?, ?, ?)', [id, "owner", user.id]);
         return new Project(id, UUID, name, description, created_at, columns);
     },
-    // DEPRECATED
-    // async getProject(user: User, UUID: string) {
-    //     const role = await this.authorizeProjectAccess(user, UUID);
-    //     const [rows] = await db.execute<projectRow[]>(`SELECT * FROM projects WHERE UUID = ?`, [UUID]);
-    //     if (!rows[0] || rows[0].length === 0) {
-    //         throw new Error("Project not found");
-    //     }
-    //     return rows[0];
-    // },
     async getUserProjectsFormatted(user) {
         const [rows1] = await db.execute(`SELECT * FROM users WHERE UUID = ?`, [user.UUID]);
         const [rows2] = await db.execute(`SELECT * FROM user_projects WHERE user_id = ?`, [user.id]);

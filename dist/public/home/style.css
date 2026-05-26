@@ -4,6 +4,11 @@ body {
     display: flex;
 }
 
+.addBtn {
+    border: 2px dashed var(--not-important-text) !important;
+    border-radius: 5px;
+}
+
 /* NAV & menuBtn (mobile only) */
 nav {
     z-index: 2000;
@@ -177,6 +182,15 @@ nav {
     background-color: var(--not-important-text);
 }
 
+.addColBtn {
+    height: 50px;
+    width: 200px;
+    cursor: pointer;
+    color: var(--accent-color);
+    font-size: 25px;
+    background-color: var(--secondary-color-partially-transparent);
+}
+
 .titleRow,
 .taskTitleRow {
     display: flex;
@@ -329,11 +343,11 @@ input {
     gap: 10px;
 }
 
-.addTaskSubtasksWrapper > div:nth-child(n) {
+.addTaskSubtasksWrapper>div:nth-child(n) {
     background-color: var(--secondary-color);
 }
 
-.addTaskSubtasksWrapper > div:nth-child(2n) {
+.addTaskSubtasksWrapper>div:nth-child(2n) {
     background-color: var(--third-color);
 }
 
@@ -346,7 +360,6 @@ input {
 }
 
 .addTaskAddSubtaskBtn {
-    border: none;
     cursor: pointer;
     color: var(--accent-color);
     font-size: 35px;

@@ -1,10 +1,12 @@
+import { UI } from '../UI/UI.js';
 export const columnService = {
     columnMenuOptions: [
         {
             name: 'Delete column',
-            event: function () {
+            event: function (column) {
                 // DEBUG
-                console.log("Deleting column: " + this.name);
+                console.log("Deleting column " + column.name);
+                columnService.deleteColumn(column);
             }
         }
     ],
@@ -27,7 +29,7 @@ export const columnService = {
         const colSettingsBtn = document.createElement('button');
         colSettingsBtn.classList.add('btn', 'colSettingsBtn', 'flex');
         colSettingsBtn.textContent = '☰';
-        this.createColumnMenu(colSettingsBtn);
+        this.createColumnMenu(column, colSettingsBtn);
         titleRow.appendChild(colTitle);
         titleRow.appendChild(colSettingsBtn);
         const colSeparator = document.createElement('div');
@@ -36,13 +38,14 @@ export const columnService = {
         col.appendChild(colSeparator);
         return col;
     },
-    createColumnMenu(columnMenuBtn) {
+    createColumnMenu(column, columnMenuBtn) {
         const colMenu = document.createElement('div');
         colMenu.classList.add('colMenu');
         this.columnMenuOptions.forEach(option => {
             const optionEl = document.createElement('div');
             optionEl.classList.add('colMenuOption');
             optionEl.textContent = option.name;
+            optionEl.addEventListener('click', () => option.event(column));
             colMenu.appendChild(optionEl);
         });
         tippy(columnMenuBtn, {
@@ -53,6 +56,10 @@ export const columnService = {
             placement: "right-end",
             content: colMenu,
         });
+    },
+    deleteColumn(column) {
+        UI.activeProject.columns = UI.activeProject.columns.filter(col => col.id !== column.id);
+        UI.draw(UI.activeProject);
     },
 };
 //# sourceMappingURL=columnService.js.map
