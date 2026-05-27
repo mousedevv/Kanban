@@ -1,10 +1,14 @@
+import { confirmPopup, notification } from '../../../utils/notification.js';
+import { Column } from '../types/column.js';
 import { UI } from '../UI/UI.js';
 export const columnService = {
     columnMenuOptions: [
         {
             name: 'Delete column',
-            event: function (column) {
-                // DEBUG
+            event: async function (column) {
+                const confirmation = await confirmPopup();
+                if (!confirmation)
+                    return;
                 console.log("Deleting column " + column.name);
                 columnService.deleteColumn(column);
             }
@@ -56,6 +60,27 @@ export const columnService = {
             placement: "right-end",
             content: colMenu,
         });
+    },
+    async addColumn(name) {
+        try {
+            const res = await fetch("/api/project/add-column", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ project_id: UI.activeProject.id, name: name }),
+            });
+            const rJ = await res.json();
+            const column = new Column(rJ.id, rJ.project_id, rJ.name, []);
+            // Add new column to activeProject columns and redraw
+            UI.activeProject.columns.push(column);
+            UI.draw(UI.activeProject);
+            return column;
+        }
+        catch (e) {
+            notification("Error occurred while adding the column - try again later!", "error");
+            return;
+        }
     },
     deleteColumn(column) {
         UI.activeProject.columns = UI.activeProject.columns.filter(col => col.id !== column.id);

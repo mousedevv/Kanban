@@ -6,7 +6,8 @@ body {
 
 .addBtn {
     border: 2px dashed var(--not-important-text) !important;
-    border-radius: 5px;
+    border-radius: 5px !important;
+    background-color: var(--secondary-color-partially-transparent) !important;
 }
 
 /* NAV & menuBtn (mobile only) */
@@ -296,8 +297,19 @@ nav {
     background-color: var(--window-color);
     width: 30vw;
     min-width: 450px;
-    height: calc(var(--full-height) - 20vh);
+    height: fit-content;
+    max-height: calc(100vh - var(--nav-height) - 20px);
     border-radius: 30px;
+    box-sizing: border-box;
+    overflow: visible;
+    padding: 30px 40px 20px;
+}
+
+.window .closeBtn {
+    border-radius: 10px;
+    top: -18px;
+    right: -18px;
+    z-index: 10;
 }
 
 .window .separator {
@@ -309,25 +321,40 @@ nav {
 
 /* ADD TASK WINDOW */
 
-.addTaskWindow,
-.addTaskForm {
+.addWindow,
+.addForm {
     position: relative;
     gap: 15px;
-    min-height: 600px;
     height: fit-content;
+}
+
+.addTaskWindow {
+    overflow: visible;
 }
 
 .addTaskForm {
     width: 100%;
-    min-height: 600px;
-    height: fit-content;
+    max-height: calc(100vh - var(--nav-height) - 220px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 10px;
+    box-sizing: border-box;
 }
 
 .addTaskColumnWrapper label {
     margin-right: 10px;
 }
 
-textarea,
+textarea {
+    text-align: center;
+    width: 100%;
+    min-height: 130px;
+    max-height: 240px;
+    resize: vertical;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
 input {
     text-align: center;
     width: 50%;
@@ -386,7 +413,7 @@ input {
     /* color: red; */
 }
 
-.addTaskSubmitBtn {
+.addSubmitBtn {
     margin-bottom: 35px;
     padding: 15px;
     width: 150px;

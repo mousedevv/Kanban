@@ -1,5 +1,4 @@
 const NOTIFICATION_BACKGROUND = "#121A20";
-// const CLOSE_NOTIFICATION_BTN_BACKGROUND = "#4464AD";
 const SwalTop = Swal.mixin({
     toast: true,
     position: "top-end",
@@ -22,5 +21,19 @@ export function notification(title, type, text) {
         title: title,
         text: text
     });
+}
+export async function confirmPopup() {
+    const result = await Swal.fire({
+        title: "Are you sure you wanna proceed?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        background: NOTIFICATION_BACKGROUND,
+        color: "#FFFFFF",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+    });
+    return result.isConfirmed;
 }
 //# sourceMappingURL=notification.js.map

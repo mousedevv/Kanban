@@ -1,43 +1,23 @@
-import { $, $$ } from "../../utils/dom/selectors.js";
-
-import { projectService } from "./services/projectService.js";
-
-export const dom = {
-    // Sidebar management
-    sidebar: $(".sidebar")! as HTMLDivElement,
-    menuBtn: $(".menuBtn")! as HTMLDivElement,
-    logoutBtn: $(".logoutBtn")! as HTMLButtonElement,
-
-    // Columns
-    content: {
-        testBtn: $(".colSettingsBtn")! as HTMLDivElement,
-        colsWrapper: $(".colsWrapper")! as HTMLDivElement,
-    },
-
-    // Windows
-    windows: {
-        wrapper: $(".windowsWrapper")! as HTMLDivElement,
-        addTask: {
-            wrapper: $(".addTaskWindow")! as HTMLDivElement,
-            form: $(".addTaskForm") as HTMLFormElement,
-            closeBtn: $(".addTaskWindow .closeBtn")! as HTMLButtonElement,
-            name: $("#addTaskName")! as HTMLInputElement,
-            description: $("#addTaskDescription")! as HTMLTextAreaElement,
-            column: $("#addTaskColumn")! as HTMLSelectElement,
-            subtasksWrapper: $(".addTaskSubtasksWrapper"),
-            addSubtaskBtn: $(".addTaskAddSubtaskBtn") as HTMLButtonElement
-        }
-    }
-}
+import { dom } from "./dom.js";
+import { notification } from "../../utils/notification.js";
+import { UI } from "./UI/UI.js";
 
 dom.menuBtn.addEventListener("click", () => {
     dom.sidebar.classList.toggle("active");
 });
 
 dom.logoutBtn.addEventListener("click", async () => {
-    await fetch("/api/logout", { method: "GET" });
-
-    window.location.href = "/welcome";
+    try {
+        await fetch("/api/logout", { method: "GET" });
+        window.location.href = "/welcome";
+    } catch (e) {
+        notification("Error occurred while logging out - try again later!", "error");
+        return;
+    }
 });
 
-projectService.initProjects();
+UI.init();
+
+// DEBUG
+// @ts-expect-error
+window.dom = dom;

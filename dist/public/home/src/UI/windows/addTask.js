@@ -1,5 +1,5 @@
 import { notification } from "../../../../utils/notification.js";
-import { dom } from "../../home.js";
+import { dom } from "../../dom.js";
 import { $, $$ } from "../../../../utils/dom/selectors.js";
 import { projectService } from "../../services/projectService.js";
 import { taskService } from "../../services/taskService.js";
@@ -35,13 +35,13 @@ dom.windows.addTask.form.addEventListener("submit", async (e) => {
     }
     // Find a column to add addedTask to col locally    
     UI.activeProject.columns[UI.activeProject.columns
-        .findIndex(el => el.id = col.id)].tasks.push(addedTask);
+        .findIndex(el => el.id === col.id)].tasks.push(addedTask);
     closeAddTaskWindow();
     await UI.draw(UI.activeProject);
 });
 // Add task window - add subtask
 dom.windows.addTask.addSubtaskBtn.addEventListener("click", e => {
-    // Buttons in the form should be with type="button" to avoid submitting it
+    // ! Buttons in the form should be with type="button" to avoid submitting it
     const wrapper = dom.windows.addTask.subtasksWrapper;
     const subtask = document.createElement("div");
     const name = document.createElement("input");

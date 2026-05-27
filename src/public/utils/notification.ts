@@ -1,7 +1,6 @@
 declare const Swal: any;
 
 const NOTIFICATION_BACKGROUND = "#121A20";
-// const CLOSE_NOTIFICATION_BTN_BACKGROUND = "#4464AD";
 
 const SwalTop = Swal.mixin({
     toast: true,
@@ -21,13 +20,29 @@ const SwalTop = Swal.mixin({
 
 // Notification at the right top of page
 export function notification(
-    title: string, 
+    title: string,
     type: "success" | "error" | "warning" | "info" | "question",
-    text?: string, 
+    text?: string,
 ) {
     SwalTop.fire({
         icon: type,
         title: title,
         text: text
     });
+}
+
+export async function confirmPopup(): Promise<boolean> {
+    const result = await Swal.fire({
+        title: "Are you sure you wanna proceed?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        background: NOTIFICATION_BACKGROUND,
+        color: "#FFFFFF",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+    });
+
+    return result.isConfirmed;
 }

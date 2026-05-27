@@ -13,7 +13,7 @@ export const taskService = {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(
-                    { project_id: UI.activeProject.id, taskDraft: taskDraft }
+                    { project_id: UI.activeProject!.id, taskDraft: taskDraft }
                 ),
             });
 
