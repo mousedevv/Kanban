@@ -82,9 +82,23 @@ export const columnService = {
             return;
         }
     },
-    deleteColumn(column) {
-        UI.activeProject.columns = UI.activeProject.columns.filter(col => col.id !== column.id);
-        UI.draw(UI.activeProject);
+    async deleteColumn(column) {
+        try {
+            const res = await fetch("/api/project/delete-column", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ project_id: UI.activeProject.id, column_id: column.id }),
+            });
+            if (!res.ok)
+                throw new Error("Failed to delete column");
+            UI.activeProject.columns = UI.activeProject.columns.filter(col => col.id !== column.id);
+            UI.draw(UI.activeProject);
+        }
+        catch (e) {
+            notification("Error occurred while deleting the column - try again later!", "error");
+        }
     },
 };
 //# sourceMappingURL=columnService.js.map

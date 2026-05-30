@@ -7,11 +7,6 @@ export const dom = {
     // Project navigation
     projectBtnWrapper: $(".projectBtnWrapper"),
     projectsWrapper: $(".projectsWrapper"),
-    // Columns
-    content: {
-        testBtn: $(".colSettingsBtn"),
-        colsWrapper: $(".colsWrapper"),
-    },
     // Windows
     windows: {
         wrapper: $(".windowsWrapper"),
@@ -30,6 +25,21 @@ export const dom = {
             form: $(".addColumnForm"),
             closeBtn: $(".addColumnWindow .closeBtn"),
             name: $("#addColumnName"),
+        },
+        createProject: {
+            wrapper: $(".createProjectWindow"),
+            form: $(".createProjectForm"),
+            closeBtn: $(".createProjectWindow .closeBtn"),
+            name: $("#createProjectName"),
+            description: $("#createProjectDescription"),
+        },
+        projectSettings: {
+            wrapper: $(".projectSettingsWindow"),
+            form: $(".projectSettingsForm"),
+            closeBtn: $(".projectSettingsWindow .closeBtn"),
+            name: $("#projectSettingsName"),
+            description: $("#projectSettingsDescription"),
+            deleteBtn: $(".projectSettingsDeleteBtn"),
         },
     },
 };

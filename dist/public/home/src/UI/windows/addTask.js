@@ -1,13 +1,15 @@
 import { notification } from "../../../../utils/notification.js";
 import { dom } from "../../dom.js";
 import { $, $$ } from "../../../../utils/dom/selectors.js";
-import { projectService } from "../../services/projectService.js";
 import { taskService } from "../../services/taskService.js";
 import { UI } from "../UI.js";
+export const addTaskWindowState = {
+    selectedColumn: null,
+};
 // Add task window submit
 dom.windows.addTask.form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const col = projectService.getColumnById(parseInt(dom.windows.addTask.column.value));
+    const col = addTaskWindowState.selectedColumn;
     if (!col) {
         notification("Error occurred while adding the task - try again later!", "error");
         return;
@@ -70,6 +72,16 @@ dom.windows.addTask.addSubtaskBtn.addEventListener("click", e => {
     subtask.appendChild(btn);
     wrapper.appendChild(subtask);
 });
+/*
+    Open window event listeners are in UI.ts,
+    because the buttons to open it
+    is created dynamically when drawing the project.
+*/
+export function openAddTaskWindow(col) {
+    addTaskWindowState.selectedColumn = col;
+    dom.windows.wrapper.classList.remove("hidden");
+    dom.windows.addTask.wrapper.classList.remove("hidden");
+}
 // Close
 dom.windows.addTask.closeBtn.addEventListener("click", () => {
     closeAddTaskWindow();
@@ -77,6 +89,8 @@ dom.windows.addTask.closeBtn.addEventListener("click", () => {
 function closeAddTaskWindow() {
     dom.windows.addTask.wrapper.classList.add("hidden");
     dom.windows.wrapper.classList.add("hidden");
+    // Clear selected column
+    addTaskWindowState.selectedColumn = null;
     clearAddTaskWindow();
 }
 function clearAddTaskWindow() {

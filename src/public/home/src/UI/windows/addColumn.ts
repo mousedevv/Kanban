@@ -1,7 +1,7 @@
 import { notification } from "../../../../utils/notification.js";
 import { dom } from "../../dom.js";
 import { columnService } from "../../services/columnService.js";
-import { UI } from "../UI.js";
+
 
 dom.windows.addColumn.form.addEventListener("submit", async e => {
     e.preventDefault();
@@ -20,6 +20,16 @@ dom.windows.addColumn.form.addEventListener("submit", async e => {
     // Close add column window and clear input
     closeAddColumnWindow();
 });
+
+/* 
+    Open window event listeners are in UI.ts, 
+    because the buttons to open it 
+    is created dynamically when drawing the project.
+*/
+export function openAddColumnWindow() {
+    dom.windows.wrapper.classList.remove("hidden");
+    dom.windows.addColumn.wrapper.classList.remove("hidden");
+}
 
 // Close
 dom.windows.addColumn.closeBtn.addEventListener("click", () => {

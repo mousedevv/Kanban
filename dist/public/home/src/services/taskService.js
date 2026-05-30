@@ -22,6 +22,31 @@ export const taskService = {
             return;
         }
     },
+    async deleteTask(task) {
+        try {
+            const res = await fetch("/api/project/delete-task", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ project_id: UI.activeProject.id, task_id: task.id }),
+            });
+            if (!res.ok)
+                throw new Error("Failed to delete task");
+            // Remove task from activeProject columns
+            UI.activeProject.columns
+                .find(col => col.id === task.column_id)
+                .tasks =
+                UI.activeProject.columns
+                    .find(col => col.id === task.column_id).tasks
+                    .filter(t => t.id !== task.id);
+            // Redraw project
+            UI.draw(UI.activeProject);
+        }
+        catch (e) {
+            notification("Error occurred while deleting the task - try again later!", "error");
+        }
+    },
     createDOMElement(task) {
         // <div class="task" id="task1">
         //     <div class="taskTitleRow">
@@ -38,9 +63,11 @@ export const taskService = {
         taskTitle.classList.add('taskTitle');
         taskTitle.textContent = task.name;
         taskTitle.contentEditable = 'true';
+        taskTitle.spellcheck = false;
         taskTitle.addEventListener('blur', () => {
             task.name = taskTitle.textContent;
         });
+        // Task checkbox
         const taskCheckbox = document.createElement('input');
         taskCheckbox.type = 'checkbox';
         taskCheckbox.classList.add('flex', 'taskCheckbox');

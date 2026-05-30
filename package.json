@@ -33,7 +33,7 @@
     "tippy.js": "^6.3.7"
   },
   "scripts": {
-    "browser-sync": "browser-sync start --proxy localhost:5000 --files dist/public/**/* --logLevel debug",
+    "bs": "browser-sync start --proxy localhost:5000 --files dist/public/**/* --logLevel debug",
     "faststart": "node ./dist/server/index.js",
     "start": "npm install && tsc && node clean-maps.js && node ./dist/server/index.js"
   }

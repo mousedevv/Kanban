@@ -10,12 +10,6 @@ export const dom = {
     projectBtnWrapper: $(".projectBtnWrapper")! as HTMLDivElement,
     projectsWrapper: $(".projectsWrapper")! as HTMLDivElement,
 
-    // Columns
-    content: {
-        testBtn: $(".colSettingsBtn")! as HTMLDivElement,
-        colsWrapper: $(".colsWrapper")! as HTMLDivElement,
-    },
-
     // Windows
     windows: {
         wrapper: $(".windowsWrapper")! as HTMLDivElement,
@@ -34,6 +28,21 @@ export const dom = {
             form: $(".addColumnForm") as HTMLFormElement,
             closeBtn: $(".addColumnWindow .closeBtn")! as HTMLButtonElement,
             name: $("#addColumnName")! as HTMLInputElement,
+        },
+        createProject: {
+            wrapper: $(".createProjectWindow")! as HTMLDivElement,
+            form: $(".createProjectForm") as HTMLFormElement,
+            closeBtn: $(".createProjectWindow .closeBtn")! as HTMLButtonElement,
+            name: $("#createProjectName")! as HTMLInputElement,
+            description: $("#createProjectDescription")! as HTMLTextAreaElement,
+        },
+        projectSettings: {
+            wrapper: $(".projectSettingsWindow")! as HTMLDivElement,
+            form: $(".projectSettingsForm") as HTMLFormElement,
+            closeBtn: $(".projectSettingsWindow .closeBtn")! as HTMLButtonElement,
+            name: $("#projectSettingsName")! as HTMLInputElement,
+            description: $("#projectSettingsDescription")! as HTMLTextAreaElement,
+            deleteBtn: $(".projectSettingsDeleteBtn")! as HTMLButtonElement,
         },
     },
 };

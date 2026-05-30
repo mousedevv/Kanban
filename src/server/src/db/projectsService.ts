@@ -33,6 +33,13 @@ export const DBProjectsService = {
         return new Column(rows.insertId, columnDraft.project_id, columnDraft.name, []);
     },
 
+    async deleteColumn(columnId: number) {
+        await db.execute(
+            "DELETE FROM `columns` WHERE id = ?",
+            [columnId]
+        );
+    },
+
     async addTask(taskDraft: TaskDraft): Promise<Task> {
         console.log(taskDraft);
         // Add task
@@ -94,6 +101,13 @@ export const DBProjectsService = {
             rows2[0].label_id, 
             rows2[0].created_at,
             subtasks
+        );
+    },
+
+    async deleteTask(taskId: number) {
+        await db.execute(
+            "DELETE FROM `tasks` WHERE id = ?",
+            [taskId]
         );
     },
 

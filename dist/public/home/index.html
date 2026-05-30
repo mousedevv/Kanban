@@ -21,6 +21,7 @@
     <script type="module" src="./src/home.js" type="module" defer></script>
     <script type="module" src="./src/UI/windows/addTask.js" type="module" defer></script>
     <script type="module" src="./src/UI/windows/addColumn.js" type="module" defer></script>
+    <script type="module" src="./src/UI/windows/createProject.js" type="module" defer></script>
 </head>
 
 <body>
@@ -49,8 +50,38 @@
     </div>
 
     <div class="windowsWrapper flex">
+        <!-- CREATE PROJECT WINDOW -->
+        <div class="window createProjectWindow flexColNotCenter hidden">
+            <button class="closeBtn animateOnHover">
+                <img src="../assets/img/close.png" alt="Close">
+            </button>
+
+            <h1>Create new project</h1>
+            <form class="createProjectForm addForm flexColNotCenter">
+                <input id="createProjectName" type="text" placeholder="Name" required>
+
+                <textarea id="createProjectDescription" placeholder="Description"></textarea>
+
+                <button type="submit" class="btn addSubmitBtn animateOnHover flex">Create</button>
+            </form>
+        </div>
+
+        <!-- ADD COLUMN WINDOW -->
+        <div class="window addColumnWindow flexColNotCenter hidden">
+            <button class="closeBtn animateOnHover">
+                <img src="../assets/img/close.png" alt="Close">
+            </button>
+
+            <h1>Add column</h1>
+            <form class="addColumnForm addForm flexColNotCenter">
+                <input id="addColumnName" type="text" placeholder="Name" required>
+
+                <button type="submit" class="btn addSubmitBtn animateOnHover flex">Add</button>
+            </form>
+        </div>
+
         <!-- ADD TASK WINDOW -->
-        <div class="window addTaskWindow addWindow hidden flexColNotCenter">
+        <div class="window addTaskWindow flexColNotCenter hidden">
             <button class="closeBtn animateOnHover">
                 <img src="../assets/img/close.png" alt="Close">
             </button>
@@ -60,15 +91,6 @@
                 <input id="addTaskName" type="text" placeholder="Name" required>
 
                 <textarea id="addTaskDescription" placeholder="Description"></textarea>
-
-                <div class="optionWrapper addTaskColumnWrapper flex">
-                    <label for="addTaskColumn">Column:</label>
-                    <select id="addTaskColumn" required>
-                        <option value="1">22143124</option>
-                        <option value="2">c2</option>
-                        <option value="3">c3</option>
-                    </select>
-                </div>
 
                 <div class="separator"></div>
 
@@ -84,21 +106,28 @@
             </form>
         </div>
 
-        <!-- ADD COLUMN WINDOW -->
-        <div class="window addWindow addColumnWindow flexColNotCenter">
+        <div class="window projectSettingsWindow flexColNotCenter">
             <button class="closeBtn animateOnHover">
                 <img src="../assets/img/close.png" alt="Close">
             </button>
 
-            <h1>Add column</h1>
-            <form class="addColumnForm addForm flexColNotCenter">
-                <input id="addColumnName" type="text" placeholder="Name" required>
+            <h1>Project settings</h1>
+            <form class="projectSettingsForm addForm flexColNotCenter">
+                <input id="projectSettingsName" type="text" placeholder="Name" required>
 
-                <button type="submit" class="btn addSubmitBtn animateOnHover flex">Add</button>
-            </form>
+                <textarea id="projectSettingsDescription" placeholder="Description"></textarea>
+
+                <div class="separator"></div>
+
+                <div class="dangerZoneProjectSettings">
+                    <h2 class="dangerZoneTitle">
+                        Danger zone <br>
+                        <p class="dangerZoneTitleSmaller">Do not proceed if you don't know what you're doing!</p>
+                    </h2>
+
+                    <button type="button" class="btn deleteProjectBtn animateOnHover flex">Delete project</button>
+                </div>
         </div>
-        <div class="window hidden"></div>
-        <div class="window hidden"></div>
         <div class="window hidden"></div>
     </div>
 </body>

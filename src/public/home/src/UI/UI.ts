@@ -4,6 +4,10 @@ import { projectService } from "../services/projectService.js";
 import { columnService } from "../services/columnService.js";
 import { taskService } from "../services/taskService.js";
 import { Project } from "../types/project.js";
+import { openAddTaskWindow } from "./windows/addTask.js";
+import { openAddColumnWindow } from "./windows/addColumn.js";
+import { openCreateProjectWindow } from "./windows/createProject.js";
+import { openProjectSettingsWindow } from "./windows/projectSettings.js";
 
 export const UI = {
     activeProject: null as Project | null,
@@ -52,6 +56,8 @@ export const UI = {
         const addBtn = document.createElement('button');
         addBtn.classList.add('btn', 'addBtn', 'animateOnHover', 'addProjectBtn');
         addBtn.textContent = '+';
+        addBtn.addEventListener('click', openCreateProjectWindow)
+
         dom.projectBtnWrapper.appendChild(addBtn);
     },
 
@@ -85,14 +91,15 @@ export const UI = {
             projectName.textContent = project.name;
             projectHeader.appendChild(projectName);
 
-            const addTaskBtn = document.createElement('button');
-            addTaskBtn.classList.add('addTaskBtn');
-            addTaskBtn.textContent = 'Add task';
-            addTaskBtn.addEventListener('click', () => {
-                dom.windows.wrapper.classList.remove('hidden');
-                dom.windows.addTask.wrapper.classList.remove('hidden');
-            });
-            projectHeader.appendChild(addTaskBtn);
+            // Open project settings btn
+            const projectSettingsBtn = document.createElement('button');
+            projectSettingsBtn.classList.add('projectSettingsBtn', 'flex', 'rotateOnHover');
+            projectSettingsBtn.textContent = '⚙';
+
+            projectSettingsBtn.addEventListener('click', openProjectSettingsWindow);
+            
+
+            projectHeader.appendChild(projectSettingsBtn);
 
             projectContent.appendChild(projectHeader);
 
@@ -105,16 +112,24 @@ export const UI = {
                     const taskEl = taskService.createDOMElement(task);
                     col.appendChild(taskEl);
                 });
+
+                // Add "Add task" button to column
+                const addTaskBtn = document.createElement('button');
+                addTaskBtn.classList.add('addTaskBtn', 'addBtn', 'btn', 'animateOnHover');
+                addTaskBtn.textContent = '+';
+                addTaskBtn.addEventListener('click', () => {
+                    openAddTaskWindow(column);
+                });
+                col.appendChild(addTaskBtn);
+
                 colsWrapper.appendChild(col);
             });
 
+            // Add "Add column" button to column wrapper
             const addColBtn = document.createElement('button');
             addColBtn.classList.add('addColBtn', 'addBtn', 'animateOnHover', 'btn');
             addColBtn.textContent = '+';
-            addColBtn.addEventListener('click', () => {
-                dom.windows.wrapper.classList.remove('hidden');
-                dom.windows.addColumn.wrapper.classList.remove('hidden');
-            });
+            addColBtn.addEventListener('click', openAddColumnWindow);
 
             colsWrapper.appendChild(addColBtn);
             projectContent.appendChild(colsWrapper);
@@ -146,19 +161,20 @@ export const UI = {
 
     async updateWindows() {
         if (!this.activeProject) return;
-        await this.updateAddTaskWindow();
+        // await this.updateAddTaskWindow();
     },
 
-    async updateAddTaskWindow() {
-        if (!this.activeProject) {
-            return;
-        }
-        dom.windows.addTask.column.innerHTML = "";
-        this.activeProject.columns.forEach(column => {
-            const option = document.createElement('option');
-            option.value = column.id.toString();
-            option.textContent = column.name;
-            dom.windows.addTask.column.appendChild(option);
-        });
-    },
+    // Deprecated - now add task btn is column dependent
+    // async updateAddTaskWindow() {
+    //     if (!this.activeProject) {
+    //         return;
+    //     }
+    //     dom.windows.addTask.column.innerHTML = "";
+    //     this.activeProject.columns.forEach(column => {
+    //         const option = document.createElement('option');
+    //         option.value = column.id.toString();
+    //         option.textContent = column.name;
+    //         dom.windows.addTask.column.appendChild(option);
+    //     });
+    // },
 };

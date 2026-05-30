@@ -17,6 +17,9 @@ export const DBProjectsService = {
         const [rows] = await db.execute("INSERT INTO `columns`(`project_id`, `name`) VALUES (?, ?)", [columnDraft.project_id, columnDraft.name]);
         return new Column(rows.insertId, columnDraft.project_id, columnDraft.name, []);
     },
+    async deleteColumn(columnId) {
+        await db.execute("DELETE FROM `columns` WHERE id = ?", [columnId]);
+    },
     async addTask(taskDraft) {
         console.log(taskDraft);
         // Add task
@@ -43,6 +46,9 @@ export const DBProjectsService = {
             subtasks.push(new Subtask(rows3.insertId, rows2[0].id, subtaskDraft.name, subtaskDraft.done, rows4[0].created_at));
         }
         return new Task(rows2[0].id, rows2[0].project_id, rows2[0].column_id, rows2[0].name, rows2[0].description, rows2[0].done, rows2[0].label_id, rows2[0].created_at, subtasks);
+    },
+    async deleteTask(taskId) {
+        await db.execute("DELETE FROM `tasks` WHERE id = ?", [taskId]);
     },
     async authorizeProjectAccess(user, projectId) {
         const [rows] = await db.execute(`SELECT * FROM user_projects WHERE user_id = ? AND project_id = ?`, [user.id, projectId]);

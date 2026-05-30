@@ -2,12 +2,14 @@
 body {
     margin: 0;
     display: flex;
+    color: white;
 }
 
 .addBtn {
     border: 2px dashed var(--not-important-text) !important;
     border-radius: 5px !important;
     background-color: var(--secondary-color-partially-transparent) !important;
+    color: white !important;
 }
 
 /* NAV & menuBtn (mobile only) */
@@ -29,7 +31,6 @@ nav {
     top: 5px;
     height: var(--nav-height);
     display: none;
-    color: white;
     font-size: 35px;
     cursor: pointer;
 }
@@ -44,7 +45,6 @@ nav {
     font-size: 17px;
     font-weight: 600;
     background-color: var(--background-color);
-    color: white;
     width: 100px;
     height: 50px;
 }
@@ -59,7 +59,6 @@ nav {
     width: var(--sidebar-width);
     height: calc(100vh - var(--nav-height));
     background: var(--secondary-color);
-    color: white;
     padding: var(--sidebar-padding);
     transition: transform 0.3s;
 }
@@ -101,11 +100,11 @@ nav {
     left: calc(var(--sidebar-width) + var(--sidebar-padding));
     width: calc(100% - var(--sidebar-width) - var(--sidebar-padding));
     height: calc(100vh - var(--nav-height));
-    box-sizing: border-box;
 }
 
 .projectHeader {
     display: flex;
+    flex-direction: row;
     align-items: center;
     position: sticky;
     top: 0;
@@ -116,23 +115,20 @@ nav {
 }
 
 .projectHeader h2 {
-    margin-right: 20px;
+    margin: 0;
+    margin-right: 15px;
 }
 
-.projectHeader button {
-    all: unset;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.projectSettingsBtn {
+    padding: 0;
+    margin: 0;
     cursor: pointer;
-    background-color: var(--accent-color);
     color: white;
-    border-radius: 5px;
-    font-size: 15px;
-    font-weight: 700;
-    padding: 15px;
-    width: 120px;
-
+    border: none;
+    font-weight: 900;
+    font-size: 50px;
+    height: 50px;
+    background-color: transparent;
 }
 
 .projectContent {
@@ -169,7 +165,6 @@ nav {
     position: relative;
     padding: 15px;
     background-color: var(--secondary-color);
-    color: white;
     border-radius: 5px;
     min-width: 200px;
     width: 200px;
@@ -205,7 +200,7 @@ nav {
     font-size: 15px;
     line-height: 25px;
     margin: 0;
-    max-width: 75%;
+    width: 75%;
 }
 
 .colSettingsBtn {
@@ -223,8 +218,7 @@ nav {
 }
 
 .task {
-    background-color: rgb(255, 255, 255);
-    color: black;
+    background-color: var(--accent-color);
     padding: 10px;
     margin: 5px 0;
     border-radius: 5px;
@@ -251,6 +245,10 @@ nav {
 
 .taskDoneSubtasksNotAllDoneText {
     color: #fa2929;
+}
+
+.addTaskBtn {
+    width: 100%;
 }
 
 .menu {
@@ -321,7 +319,7 @@ nav {
 
 /* ADD TASK WINDOW */
 
-.addWindow,
+.window,
 .addForm {
     position: relative;
     gap: 15px;
@@ -338,21 +336,23 @@ nav {
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: 10px;
-    box-sizing: border-box;
 }
 
 .addTaskColumnWrapper label {
     margin-right: 10px;
 }
 
-textarea {
+#addTaskDescription,
+#createProjectDescription {
     text-align: center;
-    width: 100%;
-    min-height: 130px;
-    max-height: 240px;
-    resize: vertical;
+    width: 75%;
+    height: 150px;
+    resize: none;
     overflow-y: auto;
-    box-sizing: border-box;
+}
+
+#createProjectDescription {
+    width: 100%;
 }
 
 input {
@@ -410,7 +410,6 @@ input {
 
 .addTaskDeleteSubtask {
     background-color: var(--background-color);
-    /* color: red; */
 }
 
 .addSubmitBtn {
@@ -420,6 +419,26 @@ input {
     font-size: 30px;
 }
 
+.dangerZoneProjectSettings {
+    background-color: var(--accent-color);
+}
+
+
+.dangerZoneTitle {
+    background-color: #fa2929;
+    color:black;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    width: 100%;
+    text-align: center;
+    font-size: 35px;
+}
+
+.dangerZoneTitleSmaller {
+    font-size: 13px;
+}
 
 
 /* MOBILE RESPONSIVENESS */

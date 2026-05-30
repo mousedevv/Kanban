@@ -30,6 +30,11 @@
     box-sizing: border-box;
 }
 
+/* Remove the outline on focused div editable elements */
+[contenteditable="true"]:focus {
+  outline: none;
+}
+
 .scroll {
     scroll-behavior: smooth;
     overflow: auto;
@@ -74,6 +79,15 @@
 
 .animateOnHover:hover {
     transform: scale(1.10);
+}
+
+.rotateOnHover {
+    transform: rotate(0deg);
+    transition: 750ms;
+}
+
+.rotateOnHover:hover {
+    transform: rotate(90deg);
 }
 
 body {

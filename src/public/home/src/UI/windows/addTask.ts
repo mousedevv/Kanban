@@ -8,14 +8,17 @@ import { taskService } from "../../services/taskService.js";
 import { SubtaskDraft } from "../../types/subtask.js";
 import { TaskDraft } from "../../types/task.js";
 import { UI } from "../UI.js";
+import { Column } from "../../types/column.js";
+
+export const addTaskWindowState = {
+    selectedColumn: null as Column | null,
+}
 
 // Add task window submit
 dom.windows.addTask.form.addEventListener("submit", async e => {
     e.preventDefault();
 
-    const col = projectService.getColumnById(
-        parseInt(dom.windows.addTask.column.value)
-    );
+    const col = addTaskWindowState.selectedColumn!;
 
     if (!col) {
         notification("Error occurred while adding the task - try again later!", "error");
@@ -53,7 +56,7 @@ dom.windows.addTask.form.addEventListener("submit", async e => {
     // Find a column to add addedTask to col locally    
     UI.activeProject!.columns[
         UI.activeProject!.columns
-        .findIndex(el => el.id === col.id)
+            .findIndex(el => el.id === col.id)
     ].tasks.push(addedTask);
 
     closeAddTaskWindow();
@@ -73,7 +76,7 @@ dom.windows.addTask.addSubtaskBtn.addEventListener("click", e => {
 
     // Subtask el
     subtask.classList.add("addTaskSubtask");
-    subtask.id = wrapper.lastElementChild? `${parseInt(wrapper.lastElementChild.id) + 1}` : "0";
+    subtask.id = wrapper.lastElementChild ? `${parseInt(wrapper.lastElementChild.id) + 1}` : "0";
 
     // Subtask name input
     name.required = true;
@@ -100,6 +103,17 @@ dom.windows.addTask.addSubtaskBtn.addEventListener("click", e => {
     wrapper.appendChild(subtask);
 });
 
+/* 
+    Open window event listeners are in UI.ts, 
+    because the buttons to open it 
+    is created dynamically when drawing the project.
+*/
+export function openAddTaskWindow(col: Column) {
+    addTaskWindowState.selectedColumn = col;
+    dom.windows.wrapper.classList.remove("hidden");
+    dom.windows.addTask.wrapper.classList.remove("hidden");
+}
+
 // Close
 dom.windows.addTask.closeBtn.addEventListener("click", () => {
     closeAddTaskWindow();
@@ -108,6 +122,10 @@ dom.windows.addTask.closeBtn.addEventListener("click", () => {
 function closeAddTaskWindow() {
     dom.windows.addTask.wrapper.classList.add("hidden");
     dom.windows.wrapper.classList.add("hidden");
+
+    // Clear selected column
+    addTaskWindowState.selectedColumn = null;
+
     clearAddTaskWindow();
 }
 
