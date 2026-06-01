@@ -1,13 +1,15 @@
 import "dotenv/config";
 
 import express from "express";
-import cors from "cors";
 import mysql2 from "mysql2/promise";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 
 import path from "path";
 import fs from "fs";
+
+// Tests
+import { testDB } from "./src/db/test.js";
 
 // Authorization utils
 import { hashPassword } from "./src/auth/hash.js";
@@ -23,8 +25,6 @@ import { initSessionMiddleware } from "./src/init/session.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-export let test: string[] = [];
 
 export const PUBLIC_PATH = path.join(__dirname, "../public");
 const PUBLIC_PATHS = [
@@ -47,7 +47,7 @@ const SKIPPED_PATHS_WHEN_LOGGED_IN = [
     '/auth',
 ];
 
-const URL = process.env.URL;
+// const URL = process.env.URL;
 const PORT = process.env.PORT;
 
 export const app = express();
@@ -59,15 +59,16 @@ app.set("trust proxy", 1);
 // (session middleware)
 app.use(initSessionMiddleware());
 
-app.use(cors({
-    origin: `${URL}:${PORT}`,
-    credentials: true
-}));
-
 app.use(express.json());
 
 // Authentication middleware
 app.use((req, res, next) => {
+    if (process.env.NODE_ENV === 'development') {
+        if (req.path.startsWith("/api")) {
+            console.log(req.body || "no body");
+        }
+    }
+
     // Check if the request route is public
     const isPublic = PUBLIC_PATHS.some((path) => req.path.startsWith(path));
 
@@ -118,25 +119,14 @@ export const db = mysql2.createPool({
     connectionLimit: 10
 });
 
-async function testDB() {
-    try {
-        await db.query('SELECT 1 AS test');
-        console.log('[MySQL] Connected to DB successfully.');
-    } catch (e: Error | any) {
-        console.log(e);
-        throw new Error(`[MySQL] Fatal Error`);
-    }
-}
+await testDB();
 
-testDB();
-
-// only for development
+// only for development - TEST FOR DEVELOPMENT - REMOVE AFTER
 if (process.env.NODE_ENV === 'development') {
-    // TEST ENDPOINTS - DEBUG - REMOVE AFTER
     app.use('/api', testsRouter);
 }
 
-// Routes
+// API Routes
 app.use('/api', authRouter);
 app.use('/api', projectRouter);
 app.use('/api', testsRouter);
@@ -145,7 +135,7 @@ app.listen(PORT, (): void => {
     console.log(`Server running on port ${PORT}`);
 });
 
-// Expose commonly used variables to console for debugging #DEBUG #DEV #REMOVEAFTER
+// Expose commonly used variables to console for debugging #DEBUG #DEV #REMOVE AFTER
 (globalThis as any).register = register;
 (globalThis as any).__dirname = __dirname;
 (globalThis as any).path = path;
@@ -153,4 +143,3 @@ app.listen(PORT, (): void => {
 (globalThis as any).hashPassword = hashPassword;
 (globalThis as any).authorize = authorize;
 (globalThis as any).db = db;
-(globalThis as any).test = test;

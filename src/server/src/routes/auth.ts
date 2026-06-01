@@ -26,7 +26,7 @@ router.post("/register", loginLimiter, async (req, res) => {
                 return res.sendStatus(409);
             default:
                 console.error(e);
-                return res.sendStatus(500); // ✅ zawsze coś zwróć
+                return res.sendStatus(500);
         }
     }
 });

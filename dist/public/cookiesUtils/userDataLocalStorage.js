@@ -7,3 +7,4 @@ export function saveUserToLocalStorage(username, userUUID) {
     localStorage.setItem("username", username);
     localStorage.setItem("userUUID", userUUID);
 }
+//# sourceMappingURL=userDataLocalStorage.js.map

@@ -10,6 +10,12 @@ export function initSessionMiddleware() {
         database: process.env.DB_DATABASE,
     };
     const sessionStore = new MySQLStore(OPTIONS);
+    sessionStore.on('ready', () => {
+        console.log('[SESSION] MySQL session store is ready');
+    });
+    sessionStore.on('error', (error) => {
+        console.error('[SESSION] MySQL session store error:', error);
+    });
     return session({
         secret: process.env.SESSION_SECRET,
         resave: false,
@@ -19,7 +25,7 @@ export function initSessionMiddleware() {
             httpOnly: true,
             // Secure only work on HTTPS
             secure: (process.env.NODE_ENV === 'production') ? true : false,
-            sameSite: 'none',
+            sameSite: (process.env.NODE_ENV === 'production') ? 'none' : 'lax',
             // 14 days
             maxAge: 14 * 24 * 60 * 60 * 1000
         }
@@ -27,3 +33,4 @@ export function initSessionMiddleware() {
 }
 // Initialize app.use(session()) middleware instantly after server starts
 export default {};
+//# sourceMappingURL=session.js.map

@@ -1,6 +1,6 @@
 {
   "name": "kanban",
-  "version": "1.0.0",
+  "version": "DEV 0.2.0",
   "description": "",
   "main": "index.js",
   "repository": {
@@ -14,23 +14,27 @@
   "bugs": {
     "url": "https://github.com/mousedevv/Kanban/issues"
   },
-  "homepage": "https://github.com/mousedevv/Kanban#readme",
+  "homepage": "https://github.com/mousedevv/Kanban",
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/express-mysql-session": "^3.0.8",
-    "@types/express-session": "^1.18.2"
+    "@types/express-session": "^1.18.2",
+    "glob": "^13.0.6"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "browser-sync": "^3.0.4",
     "dotenv": "^17.3.1",
     "express-mysql-session": "^3.0.3",
     "express-rate-limit": "^8.3.2",
     "express-session": "^1.19.0",
-    "mysql2": "^3.20.0"
+    "mysql2": "^3.20.0",
+    "tippy.js": "^6.3.7"
   },
   "scripts": {
-    
-    "tunnel": "ssh -L 3307:127.0.0.1:3306 mouse@s3.small.pl",
-    "start": "node --env-file=.env ./dist/server/index.js"
+    "bs": "browser-sync start --proxy localhost:5000 --files dist/public/**/* --logLevel debug",
+    "faststart": "node ./dist/server/index.js",
+    "start": "npm install && tsc && node clean-maps.js && node ./dist/server/index.js"
   }
 }

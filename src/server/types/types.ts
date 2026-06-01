@@ -1,12 +1,26 @@
-import { RowDataPacket, QueryResult } from "mysql2";
+import { RowDataPacket } from "mysql2";
 
-import { User } from "./user";
-import { Project } from "./project";
+import { User } from "./user.js";
+import { Project } from "./project.js";
+import { Column } from "./column.js";
+import { Task } from "./task.js";
+import { Subtask } from "./subtask.js";
 
-export type userRow = RowDataPacket & User; 
+interface userProject {
+    user_id: number;
+    project_id: number;
+    role: projectRole;
+}
+ 
 export type projectRow = RowDataPacket & Project;
+export type columnRow = RowDataPacket & Column;
+export type taskRow = RowDataPacket & Task;
+export type subtaskRow = RowDataPacket & Subtask;
 
-export type projectRole = "admin" | "user";
+export type userRow = RowDataPacket & User;
+export type userProjectsRow = RowDataPacket & userProject;
+
+export type projectRole = "owner" | "editor" | "viewer";
 
 export interface insertRowExtension {
     insertId: number;

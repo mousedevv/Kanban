@@ -1,15 +1,54 @@
 :root {
     --background-color: #11151C;
     --secondary-color: #121a20;
-    --accent-color: #4464AD;
+    --third-color: #080b0e;
+    --secondary-color-behind-overlays: #121a20b7;
+    --secondary-color-partially-transparent: #121a2060;
+    --window-color: rgb(0, 0, 0);
+    --accent-color: #4d4dff;
+    --danger-color: #fa2929;
     --text: #FFFFFF;
     --kanban-text: #c6c90f;
     --kanban-not-important-text: #bfce3d;
     --shadow-color: rgba(198, 201, 15, 0.3);
     --not-important-text: #464646;
+    --nav-height: 60px;
+    --full-height: calc(100vh - var(--nav-height));
+    --sidebar-width: 250px;
+    --sidebar-padding: 20px;
 }
 
-.flex, .flexCol {
+/* Ensure SweetAlert2 notifications appear on top of the site */
+.swal2-container {
+    z-index: 99999 !important;
+}
+
+.swal2-toast {
+    z-index: 99999 !important;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* Remove the outline on focused div editable elements */
+[contenteditable="true"]:focus {
+  outline: none;
+}
+
+.scroll {
+    scroll-behavior: smooth;
+    overflow: auto;
+}
+
+.scrollY {
+    scroll-behavior: smooth;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.flex,
+.flexCol {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -22,6 +61,11 @@
 .flexColNotCenter {
     display: flex;
     flex-direction: column;
+    align-items: center;
+}
+
+.flexNotCenter {
+    display: flex;
     align-items: center;
 }
 
@@ -38,6 +82,15 @@
     transform: scale(1.10);
 }
 
+.rotateOnHover {
+    transform: rotate(0deg);
+    transition: 750ms;
+}
+
+.rotateOnHover:hover {
+    transform: rotate(90deg);
+}
+
 body {
     font-family: "Inter", sans-serif;
     color: var(--accent-color);
@@ -50,4 +103,47 @@ body {
 
 .appNameSmaller {
     color: var(--kanban-not-important-text);
+}
+
+.btn {
+    background-color: var(--accent-color);
+    color: var(--text);
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+input:not([type="checkbox"]) {
+    all: unset;
+    background-color: var(--secondary-color);
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+textarea,
+select {
+    border-radius: 5px;
+    background-color: var(--secondary-color);
+    padding: 10px;
+    min-height: 150px;
+    color: white;
+    font-family: "Inter", sans-serif;
+}
+
+.closeBtn {
+    border: none;
+    position: absolute;
+    top: -25px;
+    right: -25px;
+    background-color: var(--window-color);
+    border-radius: 5px;
+    padding: 5px !important;
+    cursor: pointer;
+}
+
+.closeBtn img {
+    width: 50px;
 }

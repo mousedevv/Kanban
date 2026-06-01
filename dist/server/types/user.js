@@ -6,3 +6,4 @@ export class User {
         this.UUID = UUID;
     }
 }
+//# sourceMappingURL=user.js.map
