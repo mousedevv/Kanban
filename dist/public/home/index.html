@@ -22,6 +22,8 @@
     <script type="module" src="./src/UI/windows/addTask.js" type="module" defer></script>
     <script type="module" src="./src/UI/windows/addColumn.js" type="module" defer></script>
     <script type="module" src="./src/UI/windows/createProject.js" type="module" defer></script>
+    <script type="module" src="./src/UI/windows/displayProject.js" type="module" defer></script>
+    <script type="module" src="./src/saves/saveManager.js" type="module" defer></script>
 </head>
 
 <body>
@@ -49,7 +51,13 @@
         </div>
     </div>
 
-    <div class="windowsWrapper flex">
+    <div class="saveChangesPopup flexNotCenter hidden">
+        <h1>You have unsaved changes!</h1>
+        <button class="btn saveChangesBtn animateOnHover">Save</button>
+        <button class="btn discardChangesBtn animateOnHover">Discard</button>
+    </div>
+
+    <div class="windowsWrapper flex hidden">
         <!-- CREATE PROJECT WINDOW -->
         <div class="window createProjectWindow flexColNotCenter hidden">
             <button class="closeBtn animateOnHover">
@@ -106,20 +114,21 @@
             </form>
         </div>
 
-        <div class="window projectSettingsWindow flexColNotCenter">
+        <!-- PROJECT SETTINGS WINDOW -->
+        <div class="window projectSettingsWindow flexColNotCenter hidden">
             <button class="closeBtn animateOnHover">
                 <img src="../assets/img/close.png" alt="Close">
             </button>
 
             <h1>Project settings</h1>
             <form class="projectSettingsForm addForm flexColNotCenter">
-                <input id="projectSettingsName" type="text" placeholder="Name" required>
+                <!-- <input id="projectSettingsName" type="text" placeholder="Name" required>
 
                 <textarea id="projectSettingsDescription" placeholder="Description"></textarea>
 
-                <div class="separator"></div>
+                <div class="separator"></div> -->
 
-                <div class="dangerZoneProjectSettings">
+                <div class="dangerZoneProjectSettings flexColNotCenter">
                     <h2 class="dangerZoneTitle">
                         Danger zone <br>
                         <p class="dangerZoneTitleSmaller">Do not proceed if you don't know what you're doing!</p>
@@ -127,8 +136,31 @@
 
                     <button type="button" class="btn deleteProjectBtn animateOnHover flex">Delete project</button>
                 </div>
+            </form>
         </div>
-        <div class="window hidden"></div>
+
+        <!-- DISPLAY & EDIT TASK WINDOW -->
+        <div class="window displayTaskWindow flexColNotCenter hidden">
+            <button type="button" class="closeBtn animateOnHover">
+                <img src="../assets/img/close.png" alt="Close">
+            </button>
+
+            <div class="displayTaskForm addForm flexColNotCenter">
+                <h1 class="displayTaskTaskName"></h1>
+
+                <textarea id="displayTaskDescription" placeholder="Description"></textarea>
+
+                <div class="separator"></div>
+
+                <div class="displayTaskSubtasksOptionWrapper flexColNotCenter">
+                    <h3>Subtasks</h3>
+
+                    <div class="displayTaskSubtasksWrapper flexColNotCenter"></div>
+
+                    <button type="button" class="displayTaskAddSubtaskBtn addBtn animateOnHover">+</button>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 

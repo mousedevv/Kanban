@@ -20,6 +20,16 @@ export const dom = {
             subtasksWrapper: $(".addTaskSubtasksWrapper"),
             addSubtaskBtn: $(".addTaskAddSubtaskBtn"),
         },
+        displayTask: {
+            wrapper: $(".displayTaskWindow"),
+            form: $(".displayTaskForm"),
+            closeBtn: $(".displayTaskWindow .closeBtn"),
+            name: $(".displayTaskTaskName"),
+            description: $("#displayTaskDescription"),
+            column: $("#displayTaskColumn"),
+            subtasksWrapper: $(".displayTaskSubtasksWrapper"),
+            addSubtaskBtn: $(".displayTaskAddSubtaskBtn"),
+        },
         addColumn: {
             wrapper: $(".addColumnWindow"),
             form: $(".addColumnForm"),
@@ -39,8 +49,13 @@ export const dom = {
             closeBtn: $(".projectSettingsWindow .closeBtn"),
             name: $("#projectSettingsName"),
             description: $("#projectSettingsDescription"),
-            deleteBtn: $(".projectSettingsDeleteBtn"),
+            deleteBtn: $(".deleteProjectBtn"),
         },
+    },
+    savePopup: {
+        wrapper: $(".saveChangesPopup"),
+        saveBtn: $(".saveChangesBtn"),
+        discardBtn: $(".discardChangesBtn"),
     },
 };
 //# sourceMappingURL=dom.js.map

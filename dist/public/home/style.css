@@ -71,6 +71,7 @@ nav {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    width: 100%;
 }
 
 .openProjectBtn,
@@ -326,7 +327,8 @@ nav {
     height: fit-content;
 }
 
-.addTaskWindow {
+.addTaskWindow,
+.displayTaskWindow {
     overflow: visible;
 }
 
@@ -338,11 +340,17 @@ nav {
     padding-right: 10px;
 }
 
-.addTaskColumnWrapper label {
-    margin-right: 10px;
+.displayTaskForm {
+    width: 100%;
+    height: auto !important;
+    max-height: calc(100vh - var(--nav-height) - 220px) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding-right: 10px;
 }
 
 #addTaskDescription,
+#displayTaskDescription,
 #createProjectDescription {
     text-align: center;
     width: 75%;
@@ -360,25 +368,30 @@ input {
     width: 50%;
 }
 
-.addTaskSubtasksOptionWrapper {
+.addTaskSubtasksOptionWrapper,
+.displayTaskSubtasksOptionWrapper {
     width: 65%;
     gap: 7px;
 }
 
-.addTaskSubtasksWrapper {
+.addTaskSubtasksWrapper,
+.displayTaskSubtasksWrapper {
     width: 100%;
     gap: 10px;
 }
 
-.addTaskSubtasksWrapper>div:nth-child(n) {
+.addTaskSubtasksWrapper>div:nth-child(n),
+.displayTaskSubtasksWrapper>div:nth-child(n) {
     background-color: var(--secondary-color);
 }
 
-.addTaskSubtasksWrapper>div:nth-child(2n) {
+.addTaskSubtasksWrapper>div:nth-child(2n),
+.displayTaskSubtasksWrapper>div:nth-child(2n) {
     background-color: var(--third-color);
 }
 
-.addTaskSubtask {
+.addTaskSubtask,
+.displayTaskSubtask {
     display: flex;
     width: fit-content;
     padding: 10px;
@@ -386,7 +399,8 @@ input {
     align-items: center;
 }
 
-.addTaskAddSubtaskBtn {
+.addTaskAddSubtaskBtn,
+.displayTaskAddSubtaskBtn {
     cursor: pointer;
     color: var(--accent-color);
     font-size: 35px;
@@ -394,7 +408,8 @@ input {
     background-color: var(--secondary-color-partially-transparent);
 }
 
-.addTaskSubtaskDone {
+.addTaskSubtaskDone,
+.displayTaskSubtaskDone {
     accent-color: var(--accent-color) !important;
     width: 30px;
     transform: scale(2.5);
@@ -403,12 +418,14 @@ input {
     margin: 2px;
 }
 
-.addTaskSubtaskNameInput {
+.addTaskSubtaskNameInput,
+.displayTaskSubtaskNameInput {
     background-color: transparent !important;
     width: 100%;
 }
 
-.addTaskDeleteSubtask {
+.addTaskDeleteSubtask,
+.displayTaskDeleteSubtask {
     background-color: var(--background-color);
 }
 
@@ -420,17 +437,22 @@ input {
 }
 
 .dangerZoneProjectSettings {
-    background-color: var(--accent-color);
+    border: 1px solid var(--danger-color);
+    border-radius: 10px;
+    padding: 0 0 20px 0;
+    gap: 15px;
 }
 
 
 .dangerZoneTitle {
-    background-color: #fa2929;
+    background-color: var(--danger-color);
     color:black;
     padding: 5px;
     display: flex;
+    border-radius: 10px;
     flex-direction: column;
     gap: 0px;
+    margin: 0;
     width: 100%;
     text-align: center;
     font-size: 35px;
@@ -438,6 +460,54 @@ input {
 
 .dangerZoneTitleSmaller {
     font-size: 13px;
+}
+
+/* Save changes popup */
+.saveChangesPopup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--window-color);
+    z-index: 9999;
+    position: fixed;
+    left: 50%;
+    bottom: 100px;
+    width: fit-content;
+    gap: 15px;
+    height: 100px;
+    font-size: 10px;
+    border-radius: 20px;
+    padding: 15px;
+    transform: translate(-50%, 0);
+    opacity: 1;
+    pointer-events: auto;
+    transition: transform 250ms ease, opacity 250ms ease, visibility 0ms linear 250ms;
+}
+
+.saveChangesPopup.hidden {
+    visibility: hidden;
+    display: flex !important;
+    transform: translate(-50%, 120%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.saveChangesPopup button {
+    font-weight: 600;
+}
+
+.discardChangesBtn {
+    background-color: var(--danger-color);
+}
+
+.displayTaskTaskName {
+    padding: 5px;
+    width: 100%;
+    border-radius: 5px;
+    text-align: center;
+    color: var(--not-important-text);
+    font-size: 25px;
+    margin: 0;
 }
 
 

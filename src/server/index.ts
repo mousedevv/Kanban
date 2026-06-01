@@ -63,10 +63,11 @@ app.use(express.json());
 
 // Authentication middleware
 app.use((req, res, next) => {
-    // if (process.env.NODE_ENV === 'development') {
-    //     console.log(`[HTTP ${req.method}] ${req.path}`);
-    //     console.log(req.body);
-    // }
+    if (process.env.NODE_ENV === 'development') {
+        if (req.path.startsWith("/api")) {
+            console.log(req.body || "no body");
+        }
+    }
 
     // Check if the request route is public
     const isPublic = PUBLIC_PATHS.some((path) => req.path.startsWith(path));

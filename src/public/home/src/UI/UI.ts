@@ -9,26 +9,41 @@ import { openAddColumnWindow } from "./windows/addColumn.js";
 import { openCreateProjectWindow } from "./windows/createProject.js";
 import { openProjectSettingsWindow } from "./windows/projectSettings.js";
 
+// Initialize .short String prototype method
+import "../../../utils/textShortener.js";
+
 export const UI = {
     activeProject: null as Project | null,
 
     async init() {
         await projectService.initProjects();
-        await this.draw(null);
-
-        this.openHomeTab();
+        await this.draw(null, true);
     },
 
-    async draw(project: Project | null = null) {
-        if (project) this.activeProject = project;
+    async draw(project: Project | null = null, showHomeTab = false) {
+        if (showHomeTab) {
+            this.activeProject = null;
+        }
+        else if (project) {
+            this.activeProject = project;
+        }
 
-        await this.drawProjects(false);
-        await this.updateWindows();
+        await this.drawProjects(showHomeTab);
+
+        if (showHomeTab) {
+            this.openHomeTab();
+        }
     },
 
-    async drawProjects(showHomeTab = true) {
+    async drawProjects(showHomeTab = false) {
         await this.createProjectBtns(projectService.projects);
         await this.createDOMProjects(projectService.projects, showHomeTab);
+    },
+
+    closeAllWindows() {
+        const windows = $$(".window");
+        windows.forEach(window => window.classList.add("hidden"));
+        dom.windows.wrapper.classList.add("hidden");
     },
 
     async createProjectBtns(projects: Project[]) {
@@ -48,7 +63,7 @@ export const UI = {
         projects.forEach(project => {
             const btn = document.createElement('button');
             btn.classList.add('btn', 'openProjectBtn', 'animateOnHover');
-            btn.textContent = project.name;
+            btn.textContent = project.name.short(20);
             btn.addEventListener('click', () => this.changeOpenedProject(project));
             dom.projectBtnWrapper.appendChild(btn);
         });
@@ -61,12 +76,13 @@ export const UI = {
         dom.projectBtnWrapper.appendChild(addBtn);
     },
 
-    async createDOMProjects(projects: Project[], showHomeTab = true) {
+    async createDOMProjects(projects: Project[], showHomeTab = false) {
         dom.projectsWrapper.innerHTML = '';
 
         const home = document.createElement('div');
         home.classList.add('home');
-        if (this.activeProject && !showHomeTab) {
+        const showHome = showHomeTab || !this.activeProject;
+        if (!showHome) {
             home.classList.add('hidden');
         }
         home.innerHTML = `
@@ -79,7 +95,8 @@ export const UI = {
         projects.forEach(project => {
             const projectContent = document.createElement('div');
             projectContent.classList.add('projectContent');
-            if (this.activeProject && this.activeProject.UUID !== project.UUID) {
+            // Hide all projects when showing home tab, otherwise show only the active project.
+            if (showHome || (this.activeProject && this.activeProject.UUID !== project.UUID)) {
                 projectContent.classList.add('hidden');
             }
             projectContent.id = project.UUID;
@@ -88,7 +105,7 @@ export const UI = {
             projectHeader.classList.add('projectHeader');
 
             const projectName = document.createElement('h2');
-            projectName.textContent = project.name;
+            projectName.textContent = project.name.short(25);
             projectHeader.appendChild(projectName);
 
             // Open project settings btn
@@ -141,7 +158,10 @@ export const UI = {
         const projects = $$(".projectContent");
         projects.forEach(projectContent => projectContent.classList.add('hidden'));
         const home = dom.projectsWrapper.querySelector('.home') as HTMLDivElement | null;
-        home?.classList.remove('hidden');
+        if (home) {
+            home.classList.remove('hidden');
+        }
+        this.activeProject = null;
     },
 
     changeOpenedProject(project: Project) {
@@ -156,25 +176,5 @@ export const UI = {
         const home = dom.projectsWrapper.querySelector('.home') as HTMLDivElement | null;
         home?.classList.add('hidden');
         this.activeProject = project;
-        this.updateWindows();
     },
-
-    async updateWindows() {
-        if (!this.activeProject) return;
-        // await this.updateAddTaskWindow();
-    },
-
-    // Deprecated - now add task btn is column dependent
-    // async updateAddTaskWindow() {
-    //     if (!this.activeProject) {
-    //         return;
-    //     }
-    //     dom.windows.addTask.column.innerHTML = "";
-    //     this.activeProject.columns.forEach(column => {
-    //         const option = document.createElement('option');
-    //         option.value = column.id.toString();
-    //         option.textContent = column.name;
-    //         dom.windows.addTask.column.appendChild(option);
-    //     });
-    // },
 };

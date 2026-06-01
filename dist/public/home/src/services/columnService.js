@@ -1,5 +1,5 @@
-import { confirmPopup, notification } from '../../../utils/notification.js';
-import { Column } from '../types/column.js';
+import { confirmPopup } from '../../../utils/notification.js';
+import { saveManager } from '../saves/saveManager.js';
 import { UI } from '../UI/UI.js';
 export const columnService = {
     columnMenuOptions: [
@@ -10,18 +10,21 @@ export const columnService = {
                 if (!confirmation)
                     return;
                 console.log("Deleting column " + column.name);
-                columnService.deleteColumn(column);
+                saveManager.addChange({
+                    project: UI.activeProject,
+                    type: "delete",
+                    target: "column",
+                    delta: {
+                        column_id: column.id
+                    }
+                });
+                // Change column locally
+                UI.activeProject.columns = UI.activeProject.columns.filter(col => col.id !== column.id);
+                UI.draw(UI.activeProject);
             }
         }
     ],
     createDOMElement(column) {
-        // <div class="col">
-        //     <div class="titleRow">
-        //         <div class="colTitle" contenteditable>Column 1 title</div>
-        //         <button class="btn colSettingsBtn flex" id="col1settings">☰</button>
-        //     </div>
-        //     <div class="colSeparator"></div>
-        // </div>
         const col = document.createElement('div');
         col.classList.add('col');
         const titleRow = document.createElement('div');
@@ -30,6 +33,21 @@ export const columnService = {
         colTitle.classList.add('colTitle');
         colTitle.contentEditable = 'true';
         colTitle.textContent = column.name;
+        colTitle.addEventListener('blur', () => {
+            // Save change if name was changed, otherwise do nothing
+            if (colTitle.textContent === column.name)
+                return;
+            saveManager.addChange({
+                project: UI.activeProject,
+                type: "edit",
+                target: "column",
+                delta: {
+                    name: colTitle.textContent,
+                    column_id: column.id,
+                }
+            });
+            column.name = colTitle.textContent;
+        });
         const colSettingsBtn = document.createElement('button');
         colSettingsBtn.classList.add('btn', 'colSettingsBtn', 'flex');
         colSettingsBtn.textContent = '☰';
@@ -60,45 +78,6 @@ export const columnService = {
             placement: "right-end",
             content: colMenu,
         });
-    },
-    async addColumn(name) {
-        try {
-            const res = await fetch("/api/project/add-column", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ project_id: UI.activeProject.id, name: name }),
-            });
-            const rJ = await res.json();
-            const column = new Column(rJ.id, rJ.project_id, rJ.name, []);
-            // Add new column to activeProject columns and redraw
-            UI.activeProject.columns.push(column);
-            UI.draw(UI.activeProject);
-            return column;
-        }
-        catch (e) {
-            notification("Error occurred while adding the column - try again later!", "error");
-            return;
-        }
-    },
-    async deleteColumn(column) {
-        try {
-            const res = await fetch("/api/project/delete-column", {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ project_id: UI.activeProject.id, column_id: column.id }),
-            });
-            if (!res.ok)
-                throw new Error("Failed to delete column");
-            UI.activeProject.columns = UI.activeProject.columns.filter(col => col.id !== column.id);
-            UI.draw(UI.activeProject);
-        }
-        catch (e) {
-            notification("Error occurred while deleting the column - try again later!", "error");
-        }
     },
 };
 //# sourceMappingURL=columnService.js.map

@@ -6,6 +6,7 @@
     --secondary-color-partially-transparent: #121a2060;
     --window-color: rgb(0, 0, 0);
     --accent-color: #4d4dff;
+    --danger-color: #fa2929;
     --text: #FFFFFF;
     --kanban-text: #c6c90f;
     --kanban-not-important-text: #bfce3d;
@@ -127,6 +128,7 @@ select {
     border-radius: 5px;
     background-color: var(--secondary-color);
     padding: 10px;
+    min-height: 150px;
     color: white;
     font-family: "Inter", sans-serif;
 }

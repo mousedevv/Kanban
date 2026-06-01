@@ -3,7 +3,7 @@ export class Subtask {
         public id: number,
         public task_id: number,
         public name: string,
-        public done: number,
+        public done: boolean,
         public created_at: string
     ) {
         this.id = id;

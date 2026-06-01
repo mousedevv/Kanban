@@ -2,74 +2,11 @@ import { Task, TaskDraft } from "../types/task.js";
 import { Subtask } from "../types/subtask.js";
 import { UI } from "../UI/UI.js";
 import { notification } from "../../../utils/notification.js";
+import { saveManager } from "../saves/saveManager.js";
+import { openDisplayTaskWindow } from "../UI/windows/displayProject.js";
 
 export const taskService = {
-    async addTask(taskDraft: TaskDraft): Promise<Task | void> {
-        try {
-            console.log(taskDraft);
-            const res = await fetch("/api/project/add-task", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(
-                    { project_id: UI.activeProject!.id, taskDraft: taskDraft }
-                ),
-            });
-
-            const rJ = await res.json();
-
-            return new Task(
-                rJ.id,
-                rJ.project_id,
-                rJ.column_id,
-                rJ.name,
-                rJ.description,
-                Boolean(rJ.done),
-                // rJ.label_id,
-                rJ.created_at,
-                rJ.subtasks
-            );
-        } catch (e) {
-            notification("Error occurred while adding the task - try again later!", "error");
-            return;
-        }
-    },
-
-    async deleteTask(task: Task) {
-        try {
-            const res = await fetch("/api/project/delete-task", {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ project_id: UI.activeProject!.id, task_id: task.id }),
-            });
-
-            if (!res.ok) throw new Error("Failed to delete task");
-
-            // Remove task from activeProject columns
-            UI.activeProject!.columns
-                .find(col => col.id === task.column_id)!
-                .tasks =
-                UI.activeProject!.columns
-                    .find(col => col.id === task.column_id)!.tasks
-                    .filter(t => t.id !== task.id);
-
-            // Redraw project
-            UI.draw(UI.activeProject!);
-        } catch (e) {
-            notification("Error occurred while deleting the task - try again later!", "error");
-        }
-    },
-
     createDOMElement(task: Task): HTMLDivElement {
-        // <div class="task" id="task1">
-        //     <div class="taskTitleRow">
-        //         <div class="taskTitle" contenteditable>Task 1 title</div>
-        //         <input type="checkbox" class="flex taskCheckbox" id="col1settings"></input>
-        //     </div>
-        // </div>
         const taskEl = document.createElement('div');
         taskEl.classList.add('task');
         taskEl.id = `task${task.id}`;
@@ -80,19 +17,51 @@ export const taskService = {
         const taskTitle = document.createElement('div');
         taskTitle.classList.add('taskTitle');
         taskTitle.textContent = task.name;
+        taskTitle.style.textDecoration = task.done ? "line-through 2px black" : "none";
         taskTitle.contentEditable = 'true';
+            
         taskTitle.spellcheck = false;
         taskTitle.addEventListener('blur', () => {
+            // Save change if name was changed, otherwise do nothing
+            if (taskTitle.textContent === task.name) return;
+
             task.name = taskTitle.textContent!;
-        })
+
+            saveManager.addChange({
+                project: UI.activeProject!,
+                type: "edit",
+                target: "task",
+                delta: {
+                    name: task.name,
+                    task_id: task.id,
+                    column_id: task.column_id,
+                    description: task.description,
+                    done: task.done,
+                }
+            });
+        });
 
         // Task checkbox
         const taskCheckbox = document.createElement('input');
         taskCheckbox.type = 'checkbox';
+        taskCheckbox.checked = task.done;
         taskCheckbox.classList.add('flex', 'taskCheckbox');
         taskCheckbox.addEventListener('change', () => {
             task.done = taskCheckbox.checked;
-        })
+            taskTitle.style.textDecoration = task.done ? "line-through 2px black" : "none";
+            saveManager.addChange({
+                project: UI.activeProject!,
+                type: "edit",
+                target: "task",
+                delta: {
+                    done: task.done,
+                    task_id: task.id,
+                    column_id: task.column_id,
+                    name: task.name,
+                    description: task.description,
+                }
+            });
+        });
 
         taskTitleRow.appendChild(taskTitle);
         taskTitleRow.appendChild(taskCheckbox);
@@ -116,6 +85,10 @@ export const taskService = {
             (doneSubtasksQuantity === subtasksQuantity) ?
                 doneSubtasksText.classList.add("taskDoneSubtasksAllDoneText") :
                 doneSubtasksText.classList.add("taskDoneSubtasksNotAllDoneText");
+
+            doneSubtasksText.addEventListener("click", () => {
+                openDisplayTaskWindow(UI.activeProject!.columns.find(col => col.id === task.column_id)!, task);
+            });
 
             taskEl.appendChild(doneSubtasksText);
         }

@@ -16,7 +16,31 @@ router.post('/project/create-project', async (req, res) => {
         return res.sendStatus(500);
     }
 });
-router.post(`/project/add-column`, verifyUserProjectPermissions, async (req, res) => {
+router.put('/project/edit-project', verifyUserProjectPermissions('project'), async (req, res) => {
+    try {
+        const projectId = req.body.project_id;
+        const name = req.body.name;
+        const description = req.body.description;
+        await DBProjectsService.editProject(projectId, name, description);
+        return res.sendStatus(200);
+    }
+    catch (e) {
+        console.error(e);
+        return res.sendStatus(500);
+    }
+});
+router.delete('/project/delete-project', verifyUserProjectPermissions('project'), async (req, res) => {
+    try {
+        const projectId = req.body.project_id;
+        await DBProjectsService.deleteProject(projectId);
+        return res.sendStatus(200);
+    }
+    catch (e) {
+        console.error(e);
+        return res.sendStatus(500);
+    }
+});
+router.post(`/project/add-column`, verifyUserProjectPermissions('project'), async (req, res) => {
     try {
         const col = await DBProjectsService.addColumn({ project_id: req.body.project_id, name: req.body.name });
         return res.json(col);
@@ -26,7 +50,19 @@ router.post(`/project/add-column`, verifyUserProjectPermissions, async (req, res
         return res.sendStatus(500);
     }
 });
-router.delete(`/project/delete-column`, verifyUserProjectPermissions, async (req, res) => {
+router.put(`/project/edit-column`, verifyUserProjectPermissions('column'), async (req, res) => {
+    try {
+        const columnId = req.body.column_id;
+        const name = req.body.name;
+        await DBProjectsService.editColumn(columnId, name);
+        return res.sendStatus(200);
+    }
+    catch (e) {
+        console.error(e);
+        return res.sendStatus(500);
+    }
+});
+router.delete(`/project/delete-column`, verifyUserProjectPermissions('column'), async (req, res) => {
     try {
         const columnId = req.body.column_id;
         await DBProjectsService.deleteColumn(columnId);
@@ -37,12 +73,9 @@ router.delete(`/project/delete-column`, verifyUserProjectPermissions, async (req
         return res.sendStatus(500);
     }
 });
-router.post(`/project/add-task`, verifyUserProjectPermissions, async (req, res) => {
+router.post(`/project/add-task`, verifyUserProjectPermissions('column'), async (req, res) => {
     try {
-        const task = await DBProjectsService.addTask({
-            project_id: req.body.project_id,
-            ...req.body.taskDraft
-        });
+        const task = await DBProjectsService.addTask(req.body.project_id, req.body.column_id, req.body.name, req.body.description, req.body.done || false, req.body.subtasks || []);
         return res.json(task);
     }
     catch (e) {
@@ -50,10 +83,62 @@ router.post(`/project/add-task`, verifyUserProjectPermissions, async (req, res) 
         return res.sendStatus(500);
     }
 });
-router.delete(`/project/delete-task`, verifyUserProjectPermissions, async (req, res) => {
+router.put(`/project/edit-task`, verifyUserProjectPermissions('task'), async (req, res) => {
+    try {
+        const taskId = req.body.task_id;
+        const name = req.body.name;
+        const description = req.body.description;
+        const column_id = req.body.column_id;
+        const done = req.body.done;
+        await DBProjectsService.editTask(taskId, name, description, column_id, done);
+        return res.sendStatus(200);
+    }
+    catch (e) {
+        console.error(e);
+        return res.sendStatus(500);
+    }
+});
+router.delete(`/project/delete-task`, verifyUserProjectPermissions('task'), async (req, res) => {
     try {
         const taskId = req.body.task_id;
         await DBProjectsService.deleteTask(taskId);
+        return res.sendStatus(200);
+    }
+    catch (e) {
+        console.error(e);
+        return res.sendStatus(500);
+    }
+});
+router.post('/project/add-subtask', verifyUserProjectPermissions('task'), async (req, res) => {
+    try {
+        const taskId = req.body.task_id;
+        const name = req.body.name;
+        const done = req.body.done;
+        const subtask = await DBProjectsService.addSubtask(taskId, name, done);
+        return res.json(subtask);
+    }
+    catch (e) {
+        console.error(e);
+        return res.sendStatus(500);
+    }
+});
+router.put('/project/edit-subtask', verifyUserProjectPermissions('subtask'), async (req, res) => {
+    try {
+        const subtaskId = req.body.subtask_id;
+        const name = req.body.name;
+        const done = req.body.done;
+        await DBProjectsService.editSubtask(subtaskId, name, done);
+        return res.sendStatus(200);
+    }
+    catch (e) {
+        console.error(e);
+        return res.sendStatus(500);
+    }
+});
+router.delete('/project/delete-subtask', verifyUserProjectPermissions('subtask'), async (req, res) => {
+    try {
+        const subtaskId = req.body.subtask_id;
+        await DBProjectsService.deleteSubtask(subtaskId);
         return res.sendStatus(200);
     }
     catch (e) {
@@ -67,8 +152,6 @@ router.get(`/project/get-all-projects`, async (req, res) => {
         return res.json(projects);
     }
     catch (e) {
-        // DEBUG
-        // console.log(req.session.user);
         switch (e.message) {
             case "User not found":
                 return res.sendStatus(403);

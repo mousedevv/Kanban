@@ -4,9 +4,7 @@ import { dom } from "../../dom.js";
 import { $, $$ } from "../../../../utils/dom/selectors.js";
 
 import { projectService } from "../../services/projectService.js";
-import { taskService } from "../../services/taskService.js";
 import { SubtaskDraft } from "../../types/subtask.js";
-import { TaskDraft } from "../../types/task.js";
 import { UI } from "../UI.js";
 import { Column } from "../../types/column.js";
 
@@ -30,34 +28,24 @@ dom.windows.addTask.form.addEventListener("submit", async e => {
     const DOMsubtasks = $$(".addTaskSubtask");
 
     DOMsubtasks.forEach(DOMsubtask => {
-        const name = ($(`.${DOMsubtask.className} .addTaskSubtaskNameInput`) as HTMLInputElement).value;
-        const done = ($(`.${DOMsubtask.className} .addTaskSubtaskDone`) as HTMLInputElement).checked;
+        const name = ($(`#${DOMsubtask.id} .addTaskSubtaskNameInput`) as HTMLInputElement).value;
+        const done = ($(`#${DOMsubtask.id} .addTaskSubtaskDone`) as HTMLInputElement).checked;
 
         subtasks.push({ name, done });
     });
 
-    const task: TaskDraft = {
-        project_id: UI.activeProject!.id,
-        column_id: col.id,
-        name: dom.windows.addTask.name.value,
-        description: dom.windows.addTask.description.value,
-        done: false,
-        // label_id: 1, // Placeholder
-        subtasks: subtasks
-    };
-
-    const addedTask = await taskService.addTask(task);
+    const addedTask = await projectService.addTask(
+        UI.activeProject!.id,
+        col.id,
+        dom.windows.addTask.name.value,
+        dom.windows.addTask.description.value,
+        subtasks
+    );
 
     if (!addedTask) {
         notification("Error occurred while adding the task - try again later!", "error");
         return;
     }
-
-    // Find a column to add addedTask to col locally    
-    UI.activeProject!.columns[
-        UI.activeProject!.columns
-            .findIndex(el => el.id === col.id)
-    ].tasks.push(addedTask);
 
     closeAddTaskWindow();
 
@@ -76,11 +64,18 @@ dom.windows.addTask.addSubtaskBtn.addEventListener("click", e => {
 
     // Subtask el
     subtask.classList.add("addTaskSubtask");
-    subtask.id = wrapper.lastElementChild ? `${parseInt(wrapper.lastElementChild.id) + 1}` : "0";
+
+    const id = wrapper.lastElementChild?.id || "task-0";
+
+    if (wrapper.lastElementChild) {
+        subtask.id = `task-${parseInt(id.slice(id.length - 1, id.length)) + 1}`;
+    } else {
+        subtask.id = "task-0";
+    }
 
     // Subtask name input
     name.required = true;
-    name.placeholder = `Subtask #${subtask.id} name`;
+    name.placeholder = `Subtask #${subtask.id.slice(subtask.id.length - 1, subtask.id.length)} name`;
     name.classList.add("addTaskSubtaskNameInput");
 
     // Subtask done checkbox

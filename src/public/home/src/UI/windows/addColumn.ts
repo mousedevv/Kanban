@@ -1,6 +1,8 @@
 import { notification } from "../../../../utils/notification.js";
 import { dom } from "../../dom.js";
 import { columnService } from "../../services/columnService.js";
+import { projectService } from "../../services/projectService.js";
+import { UI } from "../UI.js";
 
 
 dom.windows.addColumn.form.addEventListener("submit", async e => {
@@ -9,8 +11,8 @@ dom.windows.addColumn.form.addEventListener("submit", async e => {
     const name = dom.windows.addColumn.name.value;
 
     if (!name) return;
-
-    const column = await columnService.addColumn(name);
+    
+    const column = await projectService.addColumn(UI.activeProject!.id, name);
 
     if (!column) {
         notification("Error occurred while adding the column - try again later!", "error");

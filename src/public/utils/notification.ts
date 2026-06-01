@@ -31,17 +31,32 @@ export function notification(
     });
 }
 
-export async function confirmPopup(): Promise<boolean> {
+export async function confirmPopup(type: "delete" | "discardChanges" = "delete"): Promise<boolean> {
+    let title, text;
+    switch (type) {
+        case "delete":
+            title = "Are you sure you want to delete this?";
+            text = "This action cannot be undone!";
+            break;
+        case "discardChanges":
+            title = "Are you sure you want to discard unsaved changes?";
+            text = "All unsaved changes will be lost!";
+            break;
+        default:
+            title = "Are you sure?";
+            text = "";
+    }
+
     const result = await Swal.fire({
-        title: "Are you sure you wanna proceed?",
-        text: "You won't be able to revert this!",
+        title: title,
+        text: text,
         icon: "warning",
-        background: NOTIFICATION_BACKGROUND,
-        color: "#FFFFFF",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
+        confirmButtonText: "Confirm",
+        background: NOTIFICATION_BACKGROUND,
+        color: "#FFFFFF",
     });
 
     return result.isConfirmed;
