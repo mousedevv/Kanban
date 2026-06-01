@@ -25,6 +25,7 @@ export class Task {
 }
 
 export interface TaskDraft {
+    id?: number,
     project_id: number,
     column_id: number,
     name: string;

@@ -84,6 +84,8 @@ export const saveManager: SaveManager = {
             }
 
             this.changes = [];
+
+            UI.draw(UI.activeProject);
         } catch (e) {
             notification("Error occurred while saving the project - try again later!", "error");
             return;

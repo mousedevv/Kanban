@@ -5,6 +5,10 @@ import { Task } from "../types/task.js";
 import { SubtaskDraft } from "../types/subtask.js";
 import { UI } from "../UI/UI.js";
 
+function normalizeSubtasks(subtasks: SubtaskDraft[]) {
+    return subtasks.map(({ name, done }) => ({ name, done }));
+}
+
 export const projectService = {
     projects: [] as Project[],
 
@@ -157,7 +161,7 @@ export const projectService = {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ project_id: project_id, column_id: column_id, name: name, description: description, subtasks: subtasks }),
+                body: JSON.stringify({ project_id: project_id, column_id: column_id, name: name, description: description, subtasks: normalizeSubtasks(subtasks) }),
             });
 
             const data = await res.json();

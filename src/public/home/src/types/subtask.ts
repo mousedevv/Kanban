@@ -1,3 +1,9 @@
+let nextDraftId = -1;
+
+export function getNextDraftId(): number {
+    return nextDraftId--;
+}
+
 export class Subtask {
     constructor(
         public id: number,
@@ -15,6 +21,7 @@ export class Subtask {
 }
 
 export interface SubtaskDraft {
+    id?: number,
     name: string,
     done: boolean
 }

@@ -2,6 +2,7 @@ import { notification } from "../../../../utils/notification.js";
 import { dom } from "../../dom.js";
 import { $, $$ } from "../../../../utils/dom/selectors.js";
 import { projectService } from "../../services/projectService.js";
+import { getNextDraftId } from "../../types/subtask.js";
 import { UI } from "../UI.js";
 export const addTaskWindowState = {
     selectedColumn: null,
@@ -19,7 +20,8 @@ dom.windows.addTask.form.addEventListener("submit", async (e) => {
     DOMsubtasks.forEach(DOMsubtask => {
         const name = $(`#${DOMsubtask.id} .addTaskSubtaskNameInput`).value;
         const done = $(`#${DOMsubtask.id} .addTaskSubtaskDone`).checked;
-        subtasks.push({ name, done });
+        const id = DOMsubtask.dataset.draftId ? Number(DOMsubtask.dataset.draftId) : getNextDraftId();
+        subtasks.push({ id, name, done });
     });
     const addedTask = await projectService.addTask(UI.activeProject.id, col.id, dom.windows.addTask.name.value, dom.windows.addTask.description.value, subtasks);
     if (!addedTask) {
@@ -39,6 +41,7 @@ dom.windows.addTask.addSubtaskBtn.addEventListener("click", e => {
     const btn = document.createElement("button");
     // Subtask el
     subtask.classList.add("addTaskSubtask");
+    subtask.dataset.draftId = getNextDraftId().toString();
     const id = wrapper.lastElementChild?.id || "task-0";
     if (wrapper.lastElementChild) {
         subtask.id = `task-${parseInt(id.slice(id.length - 1, id.length)) + 1}`;

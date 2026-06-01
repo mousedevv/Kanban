@@ -1,5 +1,8 @@
 import { notification } from "../../../utils/notification.js";
 import { UI } from "../UI/UI.js";
+function normalizeSubtasks(subtasks) {
+    return subtasks.map(({ name, done }) => ({ name, done }));
+}
 export const projectService = {
     projects: [],
     getColumnById(id) {
@@ -134,7 +137,7 @@ export const projectService = {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ project_id: project_id, column_id: column_id, name: name, description: description, subtasks: subtasks }),
+                body: JSON.stringify({ project_id: project_id, column_id: column_id, name: name, description: description, subtasks: normalizeSubtasks(subtasks) }),
             });
             const data = await res.json();
             // Add to local state

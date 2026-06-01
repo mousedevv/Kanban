@@ -1,3 +1,7 @@
+let nextDraftId = -1;
+export function getNextDraftId() {
+    return nextDraftId--;
+}
 export class Subtask {
     constructor(id, task_id, name, done, created_at) {
         this.id = id;

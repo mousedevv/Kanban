@@ -4,7 +4,7 @@ import { dom } from "../../dom.js";
 import { $, $$ } from "../../../../utils/dom/selectors.js";
 
 import { projectService } from "../../services/projectService.js";
-import { SubtaskDraft } from "../../types/subtask.js";
+import { SubtaskDraft, getNextDraftId } from "../../types/subtask.js";
 import { UI } from "../UI.js";
 import { Column } from "../../types/column.js";
 
@@ -30,8 +30,9 @@ dom.windows.addTask.form.addEventListener("submit", async e => {
     DOMsubtasks.forEach(DOMsubtask => {
         const name = ($(`#${DOMsubtask.id} .addTaskSubtaskNameInput`) as HTMLInputElement).value;
         const done = ($(`#${DOMsubtask.id} .addTaskSubtaskDone`) as HTMLInputElement).checked;
+        const id = DOMsubtask.dataset.draftId ? Number(DOMsubtask.dataset.draftId) : getNextDraftId();
 
-        subtasks.push({ name, done });
+        subtasks.push({ id, name, done });
     });
 
     const addedTask = await projectService.addTask(
@@ -64,6 +65,7 @@ dom.windows.addTask.addSubtaskBtn.addEventListener("click", e => {
 
     // Subtask el
     subtask.classList.add("addTaskSubtask");
+    subtask.dataset.draftId = getNextDraftId().toString();
 
     const id = wrapper.lastElementChild?.id || "task-0";
 

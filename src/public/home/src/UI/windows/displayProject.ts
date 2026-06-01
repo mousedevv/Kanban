@@ -1,8 +1,9 @@
 import { notification } from "../../../../utils/notification.js";
 import { dom } from "../../dom.js";
 import { saveManager } from "../../saves/saveManager.js";
+import { projectService } from "../../services/projectService.js";
 import { Column } from "../../types/column.js";
-import { SubtaskDraft } from "../../types/subtask.js";
+import { SubtaskDraft, getNextDraftId } from "../../types/subtask.js";
 import { Task } from "../../types/task.js";
 import { UI } from "../UI.js";
 
@@ -11,7 +12,8 @@ export const displayTaskWindowState = {
     selectedTaskId: null as number | null,
 }
 
-function generateSubtaskElement(wrapper: HTMLDivElement, subtask: SubtaskDraft, name?: string, done?: boolean, addChangeListener?: boolean): HTMLDivElement {
+function generateSubtaskElement(wrapper: HTMLDivElement, subtask: SubtaskDraft, addChangeListener?: boolean): HTMLDivElement {
+    const subtaskId = subtask.id ?? getNextDraftId();
     const subtaskEl = document.createElement("div");
     const nameInput = document.createElement("input");
     const doneCheckbox = document.createElement("input");
@@ -20,33 +22,17 @@ function generateSubtaskElement(wrapper: HTMLDivElement, subtask: SubtaskDraft, 
     // Subtask el
     subtaskEl.classList.add("displayTaskSubtask");
     subtaskEl.id = wrapper.lastElementChild ? `task-${parseInt(wrapper.lastElementChild.id.slice(wrapper.lastElementChild.id.length - 1, wrapper.lastElementChild.id.length)) + 1}` : "task-0";
+    subtaskEl.dataset.draftId = subtaskId.toString();
 
     // Subtask name input
     nameInput.required = true;
-    nameInput.value = name || subtask.name;
+    nameInput.value = subtask.name;
     nameInput.placeholder = `Subtask #${subtaskEl.id.slice(subtaskEl.id.length - 1, subtaskEl.id.length)} name`;
     nameInput.classList.add("displayTaskSubtaskNameInput");
-    // TODO
-    // if (addChangeListener) {
-    //     nameInput.addEventListener("blur", () => {
-    //         const column = displayTaskWindowState.selectedColumn;
-    //         const taskId = displayTaskWindowState.selectedTaskId;
-    //         const project = UI.activeProject;
-
-    //         if (!column || taskId === null || !project) {
-    //             notification("Error occurred while updating the subtask - try again later!", "error");
-    //             return;
-    //         }
-
-    //         const task = column.tasks.find(t => t.id === taskId)!;
-
-    //         projectService.
-    //     });
-    // }
 
     // Subtask done checkbox
     doneCheckbox.type = "checkbox";
-    doneCheckbox.checked = done ?? subtask.done;
+    doneCheckbox.checked = subtask.done;
     doneCheckbox.classList.add("displayTaskSubtaskDone");
 
     // Delete subtask from list btn
@@ -57,6 +43,99 @@ function generateSubtaskElement(wrapper: HTMLDivElement, subtask: SubtaskDraft, 
     btn.addEventListener("click", () => {
         wrapper.removeChild(subtaskEl);
     });
+
+    if (addChangeListener) {
+        nameInput.addEventListener("blur", () => {
+            // Do not add change if name was not changed
+            if (nameInput.value === subtask.name) return;
+
+            const column = displayTaskWindowState.selectedColumn;
+            const taskId = displayTaskWindowState.selectedTaskId;
+            const project = UI.activeProject;
+
+            if (!column || taskId === null || !project) {
+                notification("Error occurred while updating the subtask - try again later!", "error");
+                return;
+            }
+
+            const task = column.tasks.find(t => t.id === taskId)!;
+
+            /*
+            export interface ProjectChange {
+                project: Project,
+                type: "edit" | "delete",
+                target: "project" | "column" | "task" | "subtask",
+                delta: {
+                    name?: string,
+                    description?: string,
+                    done?: boolean,
+                    column_id?: number,
+                    task_id?: number,
+                    subtask_id?: number,
+                }
+            }
+            */
+
+            saveManager.addChange({
+                project: UI.activeProject!,
+                type: "edit",
+                target: "subtask",
+                delta: {
+                    name: nameInput.value,
+                    done: doneCheckbox.checked,
+                    column_id: column.id,
+                    task_id: task.id,
+                    subtask_id: subtaskId
+                }
+            });
+        });
+
+        doneCheckbox.addEventListener("input", () => {
+            // Do not add change if name was not changed
+            if (doneCheckbox.checked === subtask.done) return;
+
+
+            const column = displayTaskWindowState.selectedColumn;
+            const taskId = displayTaskWindowState.selectedTaskId;
+            const project = UI.activeProject;
+
+            if (!column || taskId === null || !project) {
+                notification("Error occurred while updating the subtask - try again later!", "error");
+                return;
+            }
+
+            const task = column.tasks.find(t => t.id === taskId)!;
+
+            /*
+            export interface ProjectChange {
+                project: Project,
+                type: "edit" | "delete",
+                target: "project" | "column" | "task" | "subtask",
+                delta: {
+                    name?: string,
+                    description?: string,
+                    done?: boolean,
+                    column_id?: number,
+                    task_id?: number,
+                    subtask_id?: number,
+                }
+            }
+            */
+
+            saveManager.addChange({
+                project: UI.activeProject!,
+                type: "edit",
+                target: "subtask",
+                delta: {
+                    name: nameInput.value,
+                    done: doneCheckbox.checked,
+                    column_id: column.id,
+                    task_id: task.id,
+                    subtask_id: subtaskId
+                }
+            })
+        });
+    }
 
     subtaskEl.appendChild(doneCheckbox);
     subtaskEl.appendChild(nameInput);
@@ -94,13 +173,22 @@ dom.windows.displayTask.description.addEventListener("blur", () => {
 
 // Display task window - add subtask
 dom.windows.displayTask.addSubtaskBtn.addEventListener("click", e => {
+    // Add new subtask
+    projectService.addSubtask(
+        displayTaskWindowState.selectedColumn!.project_id,
+        displayTaskWindowState.selectedTaskId!,
+        "",
+        false
+    );
+
     // ! Buttons in the form should be with type="button" to avoid submitting it
     const wrapper = dom.windows.displayTask.subtasksWrapper;
 
     const subtaskEl = generateSubtaskElement(wrapper, {
+        id: getNextDraftId(),
         name: "",
         done: false,
-    })
+    }, true);
 
     wrapper.appendChild(subtaskEl);
 });
@@ -111,6 +199,8 @@ dom.windows.displayTask.addSubtaskBtn.addEventListener("click", e => {
     is created dynamically when drawing the project.
 */
 export function openDisplayTaskWindow(col: Column, task: Task) {
+    clearDisplayTaskWindow();
+
     dom.windows.displayTask.name.textContent = task.name;
     displayTaskWindowState.selectedColumn = col;
     displayTaskWindowState.selectedTaskId = task.id;
@@ -119,7 +209,7 @@ export function openDisplayTaskWindow(col: Column, task: Task) {
     dom.windows.displayTask.description.value = task.description;
 
     task.subtasks.forEach(subtask => {
-        const subtaskEl = generateSubtaskElement(dom.windows.displayTask.subtasksWrapper, subtask);
+        const subtaskEl = generateSubtaskElement(dom.windows.displayTask.subtasksWrapper, subtask, true);
         (subtaskEl.querySelector("input") as HTMLInputElement).value = subtask.name;
         (subtaskEl.querySelector("input") as HTMLInputElement).checked = subtask.done;
 
